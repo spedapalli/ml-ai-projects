@@ -5,7 +5,11 @@ To analyze, we use historical data composing different choices available for cus
 
 
 ## Findings :
+The data provided has a lot of bad data such as price of a used car priced in billions, while the max sale price of any car was 142M. Other issues include Prices are 0 for some of the cars; lot of features do not have data. Based on our current analysis, we are unable to define a model that can help predict a car price better. Hence we request more time to try other ways to clean up the data, fill in missing values with right values and eventually get to a right model.
 
+Based on the above data analysis, given the RMSE (and MSE) is more than 6K from couple of models, which in my opinion is still a high number with opportunity to further reduce by optimizing the data and hence the model. Couple of things to explore to continue to find the right model :
+- Identify the right set of records, may be a quartile band, which may in turn help define a model for that set range of cars.
+- Re-do the data preparation by using different encoders / imputers.
 
 
 ## Summary of Analysis :
