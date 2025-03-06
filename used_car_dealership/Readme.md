@@ -1,13 +1,18 @@
 ## About
-This project is about analysis of Used Cars for a dealership in US. The business need is to understand what factors make a car more or less expensive, and thereby price the car appropriately to achieve better bottomline.
-We assume the dealership addresses the needs of common man primarily i.e standard set of make-model cars. Vintage or high end cars will be valued on an individual basis and not through this model.
-To analyze, we use historical data composing different choices available for customers (indpendent variables) and their prices (dependent variable), received from the sales office.
+This project is about Used Car analysis for a dealership in US. The business need is to understand key factors that contribute to a car price which can be used to price the cars appropriately and thus achieve better bottomline.
+We assume the dealership primarily addresses the needs of average consumers, and not vintage or speciality cars. Vintage or high end cars will be valued on an individual basis and hence not addressed by this model.
+To analyze, we use historical data composing different choices available for customers (independent variables) and their prices (dependent variable), as received from the sales office.
 
 
 ## Findings :
-The data provided has substantial bad data, such as cars priced in billions of dollars, while the max sale price of any car was 142M. Other issues include Prices are 0 for some of the cars; sequence of numbers entered for price or odometer readings; a good chunk of records do not have all the data, etc.. Based on our current analysis, we are unable to define a model that can help predict a car price better. Hence we request more time to try other ways to clean up the data, fill in missing values with right values and eventually get to a right model.
+After few hours of analysis, we realize the data has substantial bad or incomplete data, which makes it challenging to use data as is, inspite of cleaning up the data to an extent. Some of the major inconsistencies in the data include :
+- Cars priced in billions while a Google search informs us the highest bid for a car was $142M, a Mercedes.
+- Also some of the cars have a price of 0 and hence unclear on how to interpret this data
+- Price as well as Odometer reading have 111111 or 222222, aka sequence of numbers, which makes it suspicious if data is valid
+- Lot of NaNs / empty cells etc..
+Please see below Summary of Analysis for more insight into the data challenges.
 
-Based on the above data analysis, given the RMSE (and MSE) is more than 6K from couple of models, which in my opinion is still a high number with opportunity to further reduce by optimizing the data and hence the model. Couple of things to explore to continue to find the right model :
+Inspite of the above, based on current analysis, we find RMSE is more than 6K using couple of the models. This is, this is still a high number and there is ample opportunity to further optimize the price. Couple of things to explore are :
 - Identify the right set of records, may be a quartile band, which may in turn help define a model for that set range of cars.
 - Re-do the data preparation by using different encoders / imputers.
 
