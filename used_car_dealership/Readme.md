@@ -5,14 +5,14 @@ To analyze, we use historical data composing different choices available for cus
 
 
 ## Findings :
-After few hours of analysis, we realize the data has substantial bad or incomplete data, which makes it challenging to use data as is, inspite of cleaning up the data to an extent. Some of the major inconsistencies in the data include :
+After few hours of analysis, we realize the data has substantial bad or incomplete data, which makes it challenging to use the data as is. Some of the major inconsistencies in the data include :
 - Cars priced in billions while a Google search informs us the highest bid for a car was $142M, a Mercedes.
 - Also some of the cars have a price of 0 and hence unclear on how to interpret this data
 - Price as well as Odometer reading have 111111 or 222222, aka sequence of numbers, which makes it suspicious if data is valid
 - Lot of NaNs / empty cells etc..
 Please see below Summary of Analysis for more insight into the data challenges.
 
-Inspite of the above, based on current analysis, we find RMSE is more than 6K using couple of the models. This is, this is still a high number and there is ample opportunity to further optimize the price. Couple of things to explore are :
+Inspite of the above, Encoders were used for feature engineering, models such as PCA, KMeans were explored to reduce dimensionality and Regression models used to analyze the data. The least Root Mean Square Error (RMSE), a measure to help determine our accuracy of prediction, was found to be 6k. This is still a high number and there is ample opportunity to further optimize the price. Couple of things to explore are :
 - Identify the right set of records, may be a quartile band, which may in turn help define a model for that set range of cars.
 - Re-do the data preparation by using different encoders / imputers.
 
