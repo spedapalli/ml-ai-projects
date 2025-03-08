@@ -12,7 +12,7 @@ After few hours of analysis, we realize the data has substantial bad or incomple
 - Lot of NaNs / empty cells etc..
 Please see below Summary of Analysis for more insight into the data challenges.
 
-Inspite of the above, Encoders were used for feature engineering, models such as PCA, KMeans were explored to reduce dimensionality and Regression models used to analyze the data. The least Root Mean Square Error (RMSE), a measure to help determine our accuracy of prediction, was found to be 6k. This is still a high number and there is ample opportunity to further optimize the price. Couple of things to explore are :
+Inspite of the above, Encoders were used to impute missing values; models such as PCA, KMeans were explored to reduce dimensionality; and Regression models used to analyze the data. The lowest value of Root Mean Square Error (RMSE), a measure to help determine our accuracy of prediction, was found to be 6k. This is still a high number and there is ample opportunity to further optimize the price. Couple of things to explore are :
 - Identify the right set of records, may be a quartile band, which may in turn help define a model for that set range of cars.
 - Re-do the data preparation by using different encoders / imputers.
 
