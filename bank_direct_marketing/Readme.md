@@ -20,10 +20,11 @@ As stated above, Classification models are used with Dummy being our baseline, L
 
 
 ### Model Recommendation : 
-Our choice of model is `Decision Tree`. 
+Our choice of model is `Decision Tree` based on its Accuracy which is very close to the top model and the time it takes to complete the modeling. 
 
 ## Summary of Analysis :
-- Data does not contain any NANs. 
+- Data does not contain any NANs.
+- Data was split using `stratify=yes` since the data (`y`) is imbalanced and we need to make sure the train and test data have equal proportion of 'yes' / 'no' values in `y` feature and hence not skewing the outcome.
 ### Feature Engineering : 
 - Some of the features, although ideally binary, had a 3rd value 'unknown' which made it challenging to convert these columns as binary / boolean.
 - `y`, the target variable was encoded using Label Encoder
