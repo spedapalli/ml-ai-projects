@@ -4,6 +4,8 @@ The Bank's goal is to achieve this growth in an efficient way i.e using direct m
 The bank, a Portugese bank, has collected data from its own contact center and augmented this with internal customer personal information. The target variable is captured as column 'y' which indicates 'yes' if the campaign was successful.
 Given the end output is a 'yes' or 'no', this is considered as a Classification problem.
 
+For more details on the case, please review [this PDF doc](CRISP-DM-BANK.pdf)
+
 ## Findings :
 As stated above, Classification models are used with Dummy being our baseline, LogisticRegression being one other model while we focus on the 3 classification models - KNearest Neighbor (KNN), Decision Tree and Support Vector Machines(SVM)
 - Our Baseline model Accuracy was 80%, which we expect the more sophisticated models to beat.
@@ -43,3 +45,6 @@ Our choice of model is `Decision Tree` based on its Accuracy which is very close
 
 ### Data Prep :
 - Please see above section Feature Engineering.
+
+## Code : 
+[Jupyter Notebook](bank_direct_marketing.ipynb)
