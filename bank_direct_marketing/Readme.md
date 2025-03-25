@@ -16,7 +16,7 @@ As stated above, Classification models are used with Dummy being our baseline, L
 | decision_tree	| 0.948907| 0.897481 | 0.897669 | DecisionTreeClassifier(max_depth=1, random_state=42) |
 | knn	| 8.433605 | 0.902519 | 0.894877 | KNeighborsClassifier(n_neighbors=9) |
 
-!(images/ClassifyModelsComparison.jpg)
+![Confusion Matrix](images/ClassifyModelsComparison.jpg)
 
 
 ### Model Recommendation : 
