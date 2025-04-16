@@ -3,6 +3,10 @@
 used_car_dealership/analysis/
 used_car_dealership/prompt_II copy.ipynb
 
+lifesciences/gene-exp-4-tumor/TCGA-PANCAN-HiSeq-801x20531/data.csv
+lifesciences/gene-exp-4-tumor/TCGA-PANCAN-HiSeq-801x20531/unc.edu_PANCAN_IlluminaGA_RNASeqV2.geneExp.tsv
+lifesciences/gene-exp-4-tumor/data-analysis/**
+
 # Jupyter Notebook
 ######################
 .ipynb_checkpoints
