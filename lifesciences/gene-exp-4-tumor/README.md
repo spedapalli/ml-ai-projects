@@ -62,7 +62,8 @@ We follow the standard CRISP-DM (CRoss Industry Standard Process for Data Mining
 - Modeling : Given, we are trying to identify the relationship of Gene expressions to 5 different types of tumors, we consider this to be a classification problem. We evaluate 2 Ensemble classifier models - *RandomForest* and *XGBoost*.
 
 #### Results
-All the below scores are results obtained on `test` data, after the model was trained on training dataset.
+
+Based on the below accuracy score, although the model RandomForest without PCA is most accurate, we think there may be overfitting here given the model mis-classified only 1 record. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
 
 | Model / Metrics | Accuracy Score |
 | --------------- | -------------- |
@@ -70,7 +71,7 @@ All the below scores are results obtained on `test` data, after the model was tr
 | Random Forest with PCA | 88.1987577% |
 | XGBoost with PCA | 90.6832298 |
 
-Although the Accuracy score for Random Forest without PCA is pretty high, there is a likelihood for overfitting here given the model mis-classified only 1 record. We recommend *XGBoost with PCA* to be the model of choice.
+NOTE: All the scores are results obtained on `test` data, after the model was trained on training dataset.
 
 ##### Classification Report :
 | Model / Metrics | class | precision | recall | f1-score |
@@ -104,6 +105,8 @@ Although the Accuracy score for Random Forest without PCA is pretty high, there 
 
 #### Next steps
 - Evaluate XGBoost without PCA and how it performs on the complete set of dimensions
+- Use dimension reduction techniques that preserve interpretability, such as factor analysis
+- Use other feature selection methods (RFE, SelectKBest) instead of PCA and run the models again.
 - Use Neural models to evaluate how they perform against the above
 
 #### Outline of project
