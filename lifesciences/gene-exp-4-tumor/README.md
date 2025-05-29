@@ -107,7 +107,7 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 ![XGBoost with PCA](./images/XGB_Gene_Contribs_2Model.png)
 
 ##### Individual Gene Contributions for each Class / Tumor :
-![Random Forest with PCA](./data-analysis/RForest_Gene_exp_contrib_2each_Tumor.csv)
+Random Forest with PCA : Given the file is large, request to run the model to see this output. Output is written to file ./data-analysis/RForest_Gene_exp_contrib_2each_Tumor.csv.
 
 #### Next steps
 - Modeling & Evaluation :
