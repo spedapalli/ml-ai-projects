@@ -101,13 +101,22 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 
 ![XGBoost with PCA](./images/XGBoostWithPCA_ConfMatrix.png)
 
+##### Gene expressions contribution to the model :
+![Random Forest with PCA](./images/RF_Gene_Contribs_2Model.png)
 
+![XGBoost with PCA](./images/XGB_Gene_Contribs_2Model.png)
+
+##### Individual Gene Contributions for each Class / Tumor :
+![Random Forest with PCA](./data-analysis/RForest_Gene_exp_contrib_2each_Tumor.csv)
 
 #### Next steps
-- Evaluate XGBoost without PCA and how it performs on the complete set of dimensions
-- Use dimension reduction techniques that preserve interpretability, such as factor analysis
-- Use other feature selection methods (RFE, SelectKBest) instead of PCA and run the models again.
-- Use Neural models to evaluate how they perform against the above
+- Modeling & Evaluation :
+    -- Evaluate XGBoost without PCA and how it performs on the complete set of dimensions
+    -- Use dimension reduction techniques that preserve interpretability, such as factor analysis
+    -- Use other feature selection methods (RFE, SelectKBest) instead of PCA and run the models again.
+    -- Use Neural models to evaluate how they perform against the above
+- Tech Debt / Refactoring :
+    - Use Value Object design pattern to return values from functions, for reuse.
 
 #### Outline of project
 
