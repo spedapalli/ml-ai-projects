@@ -125,7 +125,11 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 
 
 ##### Contact and Further Information
+Contact : samba.pedapalli@gmail.com
+
 Pan-Cancer analysis is done by studying a large number of tumor samples to identify commonalities and differences in each cancer Genomic and Cellular alterations.
+
 TCGA (The Cancer Genome Atlas) : An organiztion......
+
 Gene Expression : Process by which genetic information encoded in DNA is used to create RNA molecules which in direct the production of proteins, which perform key functions within the Cell, including division, growth and other processes.
 RNA-Seq : Technology that measures the expression of all genes in a sample
