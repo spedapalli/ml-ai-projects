@@ -74,7 +74,7 @@ Hyperparam tuning is done using only 1 processor unit (n_job=1) and evaluation i
 
 #### Results
 
-Based on the below accuracy score, although the 'RandomForest without PCA' model provides the best accuracy, we think there may be overfitting here given the model mis-classified only 1 record. As our goal here is to provide initial diagnosis to help guide the patient to recommend for further testing, we will be conservative over being too optimistic. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
+Based on the below Accuracy (accuracy_score()) scores, 'RandomForest with PCA' model is the most accurate, which incidentally is 100% accurate on all the given data. But any 100% accuracy indicates there is a likelihood of overfitting here. As our goal here is to provide initial diagnosis to help guide the patient to recommend for further testing, we will be conservative over being too optimistic. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
 
 | Metric / Model | Random Forest | XGBoost |
 | -------------- | ------------- | ------- |
@@ -86,6 +86,7 @@ Based on the below accuracy score, although the 'RandomForest without PCA' model
 | Best Params | max_depth : None, min_samples_split : 5, n_estimators : 200 | eta : 0.4, max_depth : None, n_estimators': 50 |
 | Best Accuracy | 0.913068 | 0.948438 |
 
+XGBoost also outperforms in terms of execution time, which can be helpful if and when the dataset has large number of records.
 
 NOTE: All the scores are results obtained on `test` data, after the model was trained on `train` dataset.
 
