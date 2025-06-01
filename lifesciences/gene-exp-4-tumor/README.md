@@ -58,57 +58,47 @@ We follow the standard CRISP-DM (CRoss Industry Standard Process for Data Mining
     - We also drop the features with values in 4th quartile i.e outliers that do not seem to provide much significance to the analysis, to ensure data is ready to be ingested by the PCA model. We are left with 18604 features / columns / dimensions.
     - We then reduce the number of dimensions / features to 640, using PCA.
 
+- Modeling : Given, we are trying to identify the relationship of Gene expressions to 5 different types of tumors, we consider this to be a classification problem. We evaluate 2 Ensemble classifier models - *RandomForest* and *XGBoost*. Both the models are evaluated using below hyperparameters.
+| Param / model | Random Forest Params | XGBoost Params |
+| ------------- | -------------------- | -------------- |
+| n_estimators      | 50, 100, 200 | 50, 100, 200 |
+| max_depth         | None (until end), 10, 20 | None (default=6), 10, 20 |
+| min_samples_split | 2, 1 | - |
+| eta               | - | 0.2, None (0.3), 0.4 |
+
+
 - Evaluation : We evaluate the above models using various methods - accuracy score, F1 score and plot a Confusion Matrix heat map.
-- Modeling : Given, we are trying to identify the relationship of Gene expressions to 5 different types of tumors, we consider this to be a classification problem. We evaluate 2 Ensemble classifier models - *RandomForest* and *XGBoost*.
 - Model is persisted for future usage, using [joblib](https://joblib.readthedocs.io/en/stable/) toolset
 
 #### Results
 
 Based on the below accuracy score, although the 'RandomForest without PCA' model provides the best accuracy, we think there may be overfitting here given the model mis-classified only 1 record. As our goal here is to provide initial diagnosis to help guide the patient to recommend for further testing, we will be conservative over being too optimistic. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
 
-| Model / Metrics | Accuracy Score |
-| --------------- | -------------- |
-| Random Forest without PCA | 99.378881% |
-| Random Forest with PCA | 88.1987577% |
-| XGBoost with PCA | 90.6832298 |
+| Metric / Model | Random Forest | XGBoost |
+| -------------- | ------------- | ------- |
+| Execution Time | 64.853351 | 0.252155 |
+| Accuracy | 1.0 | 0.919255 |
+| Precision | 1.0 | 0.993891 |
+| Recall | 1.0 | 0.925466 |
+| F1-Score | 1.0 | 0.954987 |
+| Best Params | max_depth : None, min_samples_split : 5, n_estimators : 200 | eta : 0.4, max_depth : None, n_estimators': 50 |
+| Best Accuracy | 0.913068 | 0.948438 |
+
 
 NOTE: All the scores are results obtained on `test` data, after the model was trained on `train` dataset.
-
-##### Classification Report :
-| Model / Metrics | class | precision | recall | f1-score |
-| --------------- | ----- | --------- | ------ | -------- |
-| Random Forest without PCA | BRCA | 0.98 | 1.00 | 0.99 |
-| Random Forest without PCA | COAD | 1.00 | 1.00 | 1.00 |
-| Random Forest without PCA | KIRC | 1.00 | 1.00 | 1.00 |
-| Random Forest without PCA | LUAD | 1.00 | 0.96 | 0.98 |
-| Random Forest without PCA | PRAD | 1.00 | 1.00 | 1.00 |
-|  |
-| Random Forest with PCA | BRCA | 0.77 | 1.00 | 0.87 |
-| Random Forest with PCA | COAD | 1.00 | 0.69 | 0.81 |
-| Random Forest with PCA | KIRC | 1.00 | 0.93 | 0.97 |
-| Random Forest with PCA | LUAD | 1.00 | 0.64 | 0.78 |
-| Random Forest with PCA | PRAD | 0.96 | 0.93 | 0.94 |
-| |
-| XGBoost with PCA       | BRCA | 0.98 | 1.00 | 0.99 |
-| XGBoost with PCA       | COAD | 0.93 | 0.88 | 0.90 |
-| XGBoost with PCA       | KIRC | 1.00 | 0.97 | 0.98 |
-| XGBoost with PCA       | LUAD | 1.00 | 0.68 | 0.81 |
-| XGBoost with PCA       | PRAD | 1.00 | 0.96 | 0.98 |
 
 ##### Confusion Matrix Heatmap :
 ![Random Forest without PCA](./images/RForestWithoutPCA_ConfMatrix.png)
 
-![Random Forest with PCA](./images/RFWithPCA_ConfMatrix.png)
+![Random Forest with PCA](./images/RFWithPCA_ConfMatrix1.png)
 
-![XGBoost with PCA](./images/XGBoostWithPCA_ConfMatrix.png)
+![XGBoost with PCA](./images/XGBoostWithPCA_ConfMatrix1.png)
 
 ##### Gene expressions contribution to the model :
-![Random Forest with PCA](./images/RF_Gene_Contribs_2Model.png)
+![Random Forest with PCA](./images/RF_Gene_Contribs_2Model1.png)
 
-![XGBoost with PCA](./images/XGB_Gene_Contribs_2Model.png)
+![XGBoost with PCA](./images/XGB_Gene_Contribs_2Model1.png)
 
-##### Individual Gene Contributions for each Class / Tumor :
-Random Forest with PCA : Given the file is large, request to run the model to see this output. Output is written to file ./data-analysis/RForest_Gene_exp_contrib_2each_Tumor.csv.
 
 #### Next steps
 - Modeling & Evaluation :
