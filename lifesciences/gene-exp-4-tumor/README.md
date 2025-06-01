@@ -76,7 +76,7 @@ Hyperparam tuning is done using only 1 processor unit (n_job=1) and evaluation i
 
 #### Results
 
-Based on the below Accuracy (accuracy_score()) scores, 'RandomForest with PCA' model is the most accurate, which incidentally is 100% accurate on all the given data. But any 100% accuracy indicates there is a likelihood of overfitting here. As our goal here is to provide initial diagnosis to help guide the patient to recommend for further testing, we will be conservative over being too optimistic. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
+Based on the below Accuracy (true predictions over all predictions) scores, XGBoostClassifier is the most accurate with a 91.9% accuracy. XGB model also does better in terms of other metrics as the below table shows, with precision (true +ves over predicted (true and false) +ves) of 99.39% over 90.75%, Recall of 92.55% over 88.2% and f1-score of 95.5% over 87.9%. The model does address our need to identify the potential tumor fo given set of gene expressions. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
 
 | Metric / Model | Random Forest | XGBoost |
 | -------------- | ------------- | ------- |
@@ -88,7 +88,7 @@ Based on the below Accuracy (accuracy_score()) scores, 'RandomForest with PCA' m
 | Best Params | max_depth : None, min_samples_split : 2, n_estimators : 100 | eta : 0.4, max_depth : None, n_estimators': 50 |
 | Best Accuracy | 0.953125 | 0.948438 |
 
-Note that although 'Best Accuracy' provides a different set of numbers, since this is a metric that includes scores during hyperparameter tuning i.e it is not purely based on unseen data, while Accuracy is purely based on unseen data, we go with Accuracy.
+Note that although the metric 'Best Accuracy' shows Random Forest has the Best Accuracy of 95.3% over XGB's 94.8%, this measure factors in train date during hyperparam tuning, while Accuracy only factors in test data i.e unseen data. Hence we base our decision on 'Accuracy'.
 XGBoost also outperforms in terms of execution time, which can be helpful if and when the dataset has large number of records.
 
 Another interesting observation is in the feature contribution difference across the 2 models - [Random Forest with PCA feature contribution](./images/RF_Gene_Contribs_2Model1.png) vs [XGBooster with PCA feature contributions](./images/XGB_Gene_Contribs_2Model1.png). Its unclear why the case and may require further deep dive to understand the tree splits.
