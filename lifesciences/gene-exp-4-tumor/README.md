@@ -59,6 +59,7 @@ We follow the standard CRISP-DM (CRoss Industry Standard Process for Data Mining
     - We then reduce the number of dimensions / features to 640, using PCA.
 
 - Modeling : Given, we are trying to identify the relationship of Gene expressions to 5 different types of tumors, we consider this to be a classification problem. We evaluate 2 Ensemble classifier models - *RandomForest* and *XGBoost*. Both the models are evaluated using below hyperparameters.
+
 | Param / model | Random Forest Params | XGBoost Params |
 | ------------- | -------------------- | -------------- |
 | n_estimators      | 50, 100, 200 | 50, 100, 200 |
@@ -66,6 +67,7 @@ We follow the standard CRISP-DM (CRoss Industry Standard Process for Data Mining
 | min_samples_split | 2, 1 | - |
 | eta               | - | 0.2, None (0.3), 0.4 |
 
+Hyperparam tuning is done using only 1 processor unit (n_job=1) and evaluation is based on 'Accuracy'.
 
 - Evaluation : We evaluate the above models using various methods - accuracy score, F1 score and plot a Confusion Matrix heat map.
 - Model is persisted for future usage, using [joblib](https://joblib.readthedocs.io/en/stable/) toolset
