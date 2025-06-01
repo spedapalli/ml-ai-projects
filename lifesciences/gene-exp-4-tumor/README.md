@@ -121,6 +121,7 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 - data-analysis : This folder is created when the steps in the IPYNB notebooks are run. This dir is used as a place holder for analysis and hence not checked into Git.
 
 #### Running the Application :
+**Currently this is under construction. The challenge is defining how user can input values for 640 features**
 - To run the Jupyter notebooks please follow the standard process of opening the file and executing each step in there.
 - To run the Application aka with web interface, follow below steps :
     - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `uvicorn --app-dir ./src main:app --reload --host 127.0.0.1 --port 8000` Note the URL and port are optional and these values shown here are default values.
