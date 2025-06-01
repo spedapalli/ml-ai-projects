@@ -13,6 +13,8 @@ The intent of this project is to analyse gene expressions for below 5 types of t
 - LUAD (Lung Adenocarcinoma)
 - PRAD (Prostate Adenocarcinoma)
 
+##### Findings :
+The best model to help identify which potential Tumor a patient may have, based on Gene expressions, is XGBooster, with an accuracy of 91.9%. The other model tested was RandomForestClassifier. Please see [Results](!Results) section for more specific details and data points.
 
 #### Rationale
 Why should anyone care about this question?
@@ -78,13 +80,13 @@ Based on the below Accuracy (accuracy_score()) scores, 'RandomForest with PCA' m
 
 | Metric / Model | Random Forest | XGBoost |
 | -------------- | ------------- | ------- |
-| Execution Time | 64.853351 | 0.252155 |
-| Accuracy | 1.0 | 0.919255 |
-| Precision | 1.0 | 0.993891 |
-| Recall | 1.0 | 0.925466 |
-| F1-Score | 1.0 | 0.954987 |
-| Best Params | max_depth : None, min_samples_split : 5, n_estimators : 200 | eta : 0.4, max_depth : None, n_estimators': 50 |
-| Best Accuracy | 0.913068 | 0.948438 |
+| Execution Time | 0.743135 | 0.244974 |
+| Accuracy | 0.881988 | 0.919255 |
+| Precision | 0.907549 | 0.993891 |
+| Recall | 0.881988 | 0.925466 |
+| F1-Score | 0.879262 | 0.954987 |
+| Best Params | max_depth : None, min_samples_split : 2, n_estimators : 100 | eta : 0.4, max_depth : None, n_estimators': 50 |
+| Best Accuracy | 0.953125 | 0.948438 |
 
 Note that although 'Best Accuracy' provides a different set of numbers, since this is a metric that includes scores during hyperparameter tuning i.e it is not purely based on unseen data, while Accuracy is purely based on unseen data, we go with Accuracy.
 XGBoost also outperforms in terms of execution time, which can be helpful if and when the dataset has large number of records.
