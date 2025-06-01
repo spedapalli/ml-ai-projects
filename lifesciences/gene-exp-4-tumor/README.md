@@ -86,7 +86,10 @@ Based on the below Accuracy (accuracy_score()) scores, 'RandomForest with PCA' m
 | Best Params | max_depth : None, min_samples_split : 5, n_estimators : 200 | eta : 0.4, max_depth : None, n_estimators': 50 |
 | Best Accuracy | 0.913068 | 0.948438 |
 
+Note that although 'Best Accuracy' provides a different set of numbers, since this is a metric that includes scores during hyperparameter tuning i.e it is not purely based on unseen data, while Accuracy is purely based on unseen data, we go with Accuracy.
 XGBoost also outperforms in terms of execution time, which can be helpful if and when the dataset has large number of records.
+
+Another interesting observation is in the feature contribution difference across the 2 models - [Random Forest with PCA feature contribution](./images/RF_Gene_Contribs_2Model1.png) vs [XGBooster with PCA feature contributions](./images/XGB_Gene_Contribs_2Model1.png). Its unclear why the case and may require further deep dive to understand the tree splits.
 
 NOTE: All the scores are results obtained on `test` data, after the model was trained on `train` dataset.
 
@@ -105,6 +108,7 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 
 #### Next steps
 - Modeling & Evaluation :
+    -- Understand why the feature contribution varies across the 2 models by traversing through the trees and decisions therein.
     -- Evaluate XGBoost without PCA and how it performs on the complete set of dimensions
     -- Use dimension reduction techniques that preserve interpretability, such as factor analysis
     -- Use other feature selection methods (RFE, SelectKBest) instead of PCA and run the models again.
