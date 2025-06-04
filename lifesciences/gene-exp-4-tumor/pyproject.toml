@@ -69,3 +69,11 @@ dependencies = [
     "wcwidth==0.2.13",
     "xgboost==3.0.2",
 ]
+[tool.pytest.ini_options]
+# note : below is a must for tests to be executed using pytest
+pythonpath = [
+    "src"
+]
+addopts = [
+    "--import-mode=importlib",
+]

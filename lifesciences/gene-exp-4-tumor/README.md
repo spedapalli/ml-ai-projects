@@ -4,7 +4,7 @@
 Samba Pedapalli
 
 #### Executive summary
-Pan-Cancer analysis is a study of different types of cancer to understand the underlying mechanisms of Cancer, and thereby develop effective treatments.
+Pan-Cancer analysis is a study of types of cancer and their underlying mechanisms to help diagnose patients early and develop effective treatments.
 
 The intent of this project is to analyse gene expressions for below 5 types of tumors. In identifying these expressions, we may be able to diagnose a patient early and potentially recommend for further tests / validation.
 - BRCA (Breast Cancer): Family of Genes (BRCA1 and BRCA2) are known as tumor suppresors. But mutation in these genes cause cancer.
@@ -135,6 +135,7 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 - To run the Application aka with web interface, follow below steps :
     - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `uvicorn --app-dir ./src main:app --reload --host 127.0.0.1 --port 8000` Note the URL and port are optional and these values shown here are default values.
     - Open browser and access the URL http://127.0.0.1:8000.
+    To run the tests, `cd` to the project root directory in terminal. Execute `pytest`.
 
 
 ##### Contact and Further Information
