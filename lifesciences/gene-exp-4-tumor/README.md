@@ -130,12 +130,17 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 - data-analysis : This folder is created when the steps in the IPYNB notebooks are run. This dir is used as a place holder for analysis and hence not checked into Git.
 
 #### Running the Application :
-**Currently this is under construction. The challenge is defining how user can input values for 640 features**
 - To run the Jupyter notebooks please follow the standard process of opening the file and executing each step in there.
 - To run the Application aka with web interface, follow below steps :
-    - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `uvicorn --app-dir ./src main:app --reload --host 127.0.0.1 --port 8000` Note the URL and port are optional and these values shown here are default values.
-    - Open browser and access the URL http://127.0.0.1:8000.
-    To run the tests, `cd` to the project root directory in terminal. Execute `pytest`.
+    - API :
+        - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `uvicorn --app-dir ./src main:app --reload --host 127.0.0.1 --port 8000` Note the URL and port are optional and these values shown here are default values.
+        - Open browser and access the URL http://127.0.0.1:8000.
+    - Web app :
+        - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `streamlit run ui.py`.
+        - Above should automatically open a browser window. If not, type `http://localhost:8501/` in your browser address bar.
+        - Upload a CSV file with 18604 columns of gene expressions. In `data` directory there is a test file `xgb_X_after_pca_dataset.csv` you may use.
+        - Click on **Predict** button. The table output is in the order in which the records are in the input CSV file.
+    - To run the tests, `cd` to the project root directory in terminal. Execute `pytest` or if print statements are needed on console type `pytest -s`.
 
 
 ##### Contact and Further Information
