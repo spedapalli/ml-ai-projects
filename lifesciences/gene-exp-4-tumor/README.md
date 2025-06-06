@@ -141,7 +141,7 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
         - Upload a CSV file with 18604 columns of gene expressions. In `data` directory there is a test file `xgb_X_after_pca_dataset.csv` you may use.
         - Click on **Predict** button. The table output is in the order in which the records are in the input CSV file.
     - To run the tests, `cd` to the project root directory in terminal. Execute `pytest` or if print statements are needed on console type `pytest -s`.
-
+![Web interface](./images/web_interface.jpg)
 
 ##### Contact and Further Information
 Contact : samba.pedapalli@gmail.com

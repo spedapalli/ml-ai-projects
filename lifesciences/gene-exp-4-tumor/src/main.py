@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
-from io import StringIO, BytesIO
+from io import BytesIO
 import joblib
 import pandas as pd
 import numpy as np

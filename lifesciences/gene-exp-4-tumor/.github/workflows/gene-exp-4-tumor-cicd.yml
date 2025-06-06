@@ -1,0 +1,19 @@
+name: CI/CD Workflow
+on: [push]
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: |
+          echo "Running tests..."
+          pytest
+      - name: Build application
+        run: |
+          echo "Building application..."
+          # Add your build commands here
+      - name: Deploy to server
+        run: |
+          echo "Deploying to server..."
+          # Add your deployment commands here

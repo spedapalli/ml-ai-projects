@@ -1,14 +1,8 @@
-# from unittest import TestCase
-# from fastapi import FastAPI
 
-from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from fastapi.responses import JSONResponse
 import numpy as np
-# import pandas as pd
-# from pandas import DataFrame
 import main
-# from datamodels.independent_features import IndependentFeatures
 
 DATA_ANALYSIS_DIR = './data-analysis/'
 
@@ -44,16 +38,6 @@ def test_api_predict():
     else:
         print('No predictions were returned')
 
-
-
-    # try:
-    #     with open(file_path, encoding='utf-8') as datafile :
-    #         datafiles:dict = {'file': datafile}
-    #         response = client.post("/predict", files=datafiles)
-    #         print(response)
-    #         assert response.status_code == 200
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=e)
 
 
     # def test_api_predict(self):
