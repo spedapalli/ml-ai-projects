@@ -1,0 +1,9 @@
+services:
+  gene-exp-4-tumor:
+    image: gene-exp-4-tumor:latest
+    secrets:
+      - db_password
+
+secrets:
+  db_password:
+    file: ./path/to/db_password_file
