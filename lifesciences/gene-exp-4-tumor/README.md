@@ -76,7 +76,7 @@ Hyperparam tuning is done using only 1 processor unit (n_job=1) and evaluation i
 
 #### Results
 
-Based on the below Accuracy (true predictions over all predictions) scores, XGBoostClassifier is the most accurate with a 91.9% accuracy. XGB model also does better in terms of other metrics as the below table shows, with precision (true +ves over predicted (true and false) +ves) of 99.39% over 90.75%, Recall of 92.55% over 88.2% and f1-score of 95.5% over 87.9%. The model does address our need to identify the potential tumor fo given set of gene expressions. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
+Based on the below Accuracy (true predictions over all predictions) scores, XGBoostClassifier is the most accurate with a 91.9% accuracy. XGB model also does better in terms of other metrics as the below table shows, with precision (true +ves over predicted (true and false) +ves) of 99.39% over 90.75%, Recall of 92.55% over 88.2% and f1-score aka false alarms of 95.5% over 87.9%. The model does address our need to identify the potential tumor fo given set of gene expressions. Hence, we recommend the **XGBoost with PCA** model, which is the next most accurate model.
 
 | Metric / Model | Random Forest | XGBoost |
 | -------------- | ------------- | ------- |
@@ -136,11 +136,14 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
         - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `uvicorn --app-dir ./src main:app --reload --host 127.0.0.1 --port 8000` Note the URL and port are optional and these values shown here are default values.
         - Open browser and access the URL http://127.0.0.1:8000.
     - Web app :
-        - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `streamlit run ui.py`.
+        - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `streamlit run src/ui.py`.
         - Above should automatically open a browser window. If not, type `http://localhost:8501/` in your browser address bar.
         - Upload a CSV file with 18604 columns of gene expressions. In `data` directory there is a test file `xgb_X_after_pca_dataset.csv` you may use.
         - Click on **Predict** button. The table output is in the order in which the records are in the input CSV file.
     - To run the tests, `cd` to the project root directory in terminal. Execute `pytest` or if print statements are needed on console type `pytest -s`.
+    - To Dockerize the app :
+        - Build the docker app, `docker build -t gene-exp-4-tumor .`.
+        - Follow
 ![Web interface](./images/web_interface.jpg)
 
 ##### Contact and Further Information

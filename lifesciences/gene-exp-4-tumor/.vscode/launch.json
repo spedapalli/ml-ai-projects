@@ -5,11 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File",
-            "type": "debugpy",
+            "name": "Python Debugger: AwsS3FileUtil",
+            // "type": "debugpy",
+            "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
+            // "program": "${file}",
+            "program": "${workspaceFolder}/src/utils/AwsS3FileUtil.py",
+            "console": "integratedTerminal",
+            "args": ["--file_name", "models/xgb_GridSearch_Pipeline.pkl", "--bucket_name", "gene-exp-4-tumor", "--folder_path", "mlai-projects/gene-exp-4-tumor"]
         }
     ]
 }
