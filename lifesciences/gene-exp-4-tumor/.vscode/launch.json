@@ -12,7 +12,8 @@
             // "program": "${file}",
             "program": "${workspaceFolder}/src/utils/AwsS3FileUtil.py",
             "console": "integratedTerminal",
-            "args": ["--file_name", "models/xgb_GridSearch_Pipeline.pkl", "--bucket_name", "gene-exp-4-tumor", "--folder_path", "mlai-projects/gene-exp-4-tumor"]
+            //"args": ["--file_name", "models/xgb_GridSearch_Pipeline.pkl", "--bucket_name", "gene-exp-4-tumor", "--folder_path", "mlai-projects/gene-exp-4-tumor"]
+            "args": ["--key", "gene-exp-4-tumor/models/xgb_GridSearch_Pipeline.pkl", "--bucket", "mlai-projects", "--upload_file", "models/xgb_GridSearch_Pipeline.pkl"]
         }
     ]
 }
