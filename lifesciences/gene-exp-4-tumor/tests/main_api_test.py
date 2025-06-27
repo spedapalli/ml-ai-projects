@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 import numpy as np
 import main
 
-DATA_ANALYSIS_DIR = './data-analysis/'
+DATA_DIR = './data/'
 
 # app = FastAPI()
 
@@ -16,7 +16,7 @@ def test_api_get():
 
 
 def test_api_predict():
-    file_path = DATA_ANALYSIS_DIR + 'xgb_X_after_pca_dataset.csv'
+    file_path = DATA_DIR + 'xgb_X_after_pca_dataset.csv'
 
     with open (file_path, 'rb') as file:
         file_content = file.read()

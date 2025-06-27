@@ -1,22 +1,24 @@
+from io import BytesIO
+import pandas as pd
+import numpy as np
+
 import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
-from io import BytesIO
-import joblib
-import pandas as pd
-import numpy as np
+
 from datamodels.independent_features import IndependentFeatures
 from request.independent_features_builder import IndependentFeaturesBuilder
+from adapters.ModelsReader import ModelsReader
 
 
-MODELS_DIR = './models/'
+LOCAL_MODELS_DIR = './models/'
 ## 0=BRCA 1=COAD, 2=KIRC, 3=LUAD, 4=PRAD
 TARGET_VAR_MAP = {0: 'BRCA', 1: 'COAD', 2: 'KIRC', 3: 'LUAD', 4: 'PRAD'}
 
+# init model reader adapter - for now from AWS S3
+model_reader = ModelsReader()
+
 app = FastAPI()
-# ml_model = joblib.load('./models/XGBoost_model.pkl')
-ml_model = joblib.load(f"{MODELS_DIR}xgb_GridSearch_Pipeline.pkl")
-# print('Loaded model: ', ml_model)
 
 @app.get('/')
 def home():
@@ -33,6 +35,7 @@ async def predict_xgb(file: UploadFile = File(...)) -> JSONResponse:
 
     gene_df = pd.read_csv(BytesIO(content), index_col=0)
 
+    ml_model = model_reader.get_xgb_model()
     prediction = ml_model.predict(gene_df)
 
     result = [TARGET_VAR_MAP[int(np.argmax(arr_ele))] for arr_ele in prediction]
@@ -59,6 +62,9 @@ def predict_tumor(indi_features: IndependentFeatures):
     input_req_df = pd.DataFrame(input_req, index=[0])
     # print(input_req_df)
     # input_req_df.to_csv('./data-analysis/request.csv')
+
+    model_reader = ModelsReader()
+    ml_model = model_reader.get_xgb_model()
 
     prediction = ml_model.predict(input_req_df)
     print("Prediction: ", prediction)

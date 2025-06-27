@@ -3,7 +3,9 @@ import random
 import pandas as pd
 from pandas import DataFrame
 
+from warnings import deprecated
 
+@deprecated('Random generation is not a good approach. Hence deprecating.')
 class IndependentFeaturesBuilder :
     model_config = ConfigDict(arbitrary_types_allowed=True)
     vars_stat_desc_df:DataFrame = None

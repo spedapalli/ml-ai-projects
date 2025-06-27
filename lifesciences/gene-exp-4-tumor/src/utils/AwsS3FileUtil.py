@@ -1,5 +1,6 @@
 import boto3
 import os
+from io import BytesIO
 from dotenv import load_dotenv
 import argparse
 from pathlib import Path
@@ -13,6 +14,15 @@ AWS_SECRET_ACCESS_KEY= os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_SESSION_TOKEN= os.getenv('AWS_SESSION_TOKEN')
 AWS_DEFAULT_REGION= os.getenv('AWS_DEFAULT_REGION')
 AWS_DEFAULT_ENCRYPT_ALGO = 'AES256'
+
+
+def create_s3_client(region:str) -> S3Client :
+    # s3_client = boto3.client('s3', region_name=region)
+    s3_client = boto3.client('s3',
+                            region_name=region,
+                            aws_access_key_id=AWS_ACCESS_KEY,
+                            aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+    return s3_client
 
 
 def upload_file_with_structure(local_file_path, bucket_name:str, s3_key:str, region=AWS_DEFAULT_REGION, create_folders=True):
@@ -29,11 +39,7 @@ def upload_file_with_structure(local_file_path, bucket_name:str, s3_key:str, reg
     Returns:
         bool: True if successful, False otherwise
     """
-    # s3_client = boto3.client('s3', region_name=region)
-    s3_client = boto3.client('s3',
-                            region_name=region,
-                            aws_access_key_id=AWS_ACCESS_KEY,
-                            aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
+    s3_client = create_s3_client(region=region)
 
     # 1: Verify local file exists
     if not os.path.exists(local_file_path):
@@ -165,6 +171,18 @@ def upload_multiple_files(file_mappings, bucket_name, region='us-east-1'):
     return results
 
 
+
+def read_file(bucket_name:str, s3_key:str, region:str=AWS_DEFAULT_REGION) -> BytesIO :
+    try :
+        s3_client = create_s3_client(region)
+        obj = s3_client.get_object(Bucket=bucket_name, Key=s3_key)
+        return BytesIO(obj['Body'].read())
+    except Exception as e :
+        print(f"Failed to read the file {bucket_name}/{s3_key} from AWS S3")
+        raise e
+
+
+
 def generate_cli_commands(local_file_path, bucket_name, s3_key, region='us-east-1'):
     """
     Generate equivalent AWS CLI commands.
@@ -229,7 +247,7 @@ if __name__ == "__main__":
 
 
     # Example 2: Multiple files
-    print(f"\nMultiple files upload")
+    print(f"\nfiles upload")
     print("=" * 40)
 
     file_mappings = {
@@ -243,6 +261,15 @@ if __name__ == "__main__":
     for file_path, success in results.items():
         status = "✅" if success else "❌"
         print(f"{status} {file_path}")
+
+
+    # read the file back
+    bio:BytesIO = read_file(bucket_name, s3_key=s3_key)
+    if bio is None:
+        raise LookupError('Unable to lookup the bucket and file in S3')
+    else :
+        print("✅ Successfully read the file from S3.")
+
 
     # Show equivalent CLI commands
     # print(f"\nEquivalent AWS CLI commands:")
