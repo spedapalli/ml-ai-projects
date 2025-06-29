@@ -2,8 +2,17 @@ services:
   gene-exp-4-tumor:
     image: gene-exp-4-tumor:latest
     secrets:
-      - db_password
+      - source : app_secrets_file
+        target : /run/secrets/app_secrets
+        uid: "1234567890098765"
+        # gid: ""
+        mode: 0400
+
+    env_file:
+      - .env
+    # secrets:
+    #   - db_password
 
 secrets:
-  db_password:
-    file: ./path/to/db_password_file
+  app_secrets_file:
+    file: ./.env  #TODO: point to actial devops repo

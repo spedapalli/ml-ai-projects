@@ -6,17 +6,22 @@ import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 
-from datamodels.independent_features import IndependentFeatures
+from src.datamodels.independent_features import IndependentFeatures
 from request.independent_features_builder import IndependentFeaturesBuilder
 from adapters.ModelsReader import ModelsReader
+from utils.AppConfigParser import AppConfigParser
+from utils.SecretsLoader import SecretsLoader
 
 
 LOCAL_MODELS_DIR = './models/'
 ## 0=BRCA 1=COAD, 2=KIRC, 3=LUAD, 4=PRAD
 TARGET_VAR_MAP = {0: 'BRCA', 1: 'COAD', 2: 'KIRC', 3: 'LUAD', 4: 'PRAD'}
 
-# init model reader adapter - for now from AWS S3
-model_reader = ModelsReader()
+# --- init config classes
+# parse the config
+config_parser = AppConfigParser()
+secrets_loader = SecretsLoader(config_parser.secrets_file_loc)
+model_reader = ModelsReader(config_parser, secrets_loader)
 
 app = FastAPI()
 
@@ -63,7 +68,6 @@ def predict_tumor(indi_features: IndependentFeatures):
     # print(input_req_df)
     # input_req_df.to_csv('./data-analysis/request.csv')
 
-    model_reader = ModelsReader()
     ml_model = model_reader.get_xgb_model()
 
     prediction = ml_model.predict(input_req_df)
