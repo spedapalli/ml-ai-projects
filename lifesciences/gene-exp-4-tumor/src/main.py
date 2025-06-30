@@ -6,7 +6,7 @@ import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 
-from src.datamodels.independent_features import IndependentFeatures
+from datamodels.independent_features import IndependentFeatures
 from request.independent_features_builder import IndependentFeaturesBuilder
 from adapters.ModelsReader import ModelsReader
 from utils.AppConfigParser import AppConfigParser
