@@ -1,0 +1,12 @@
+# Using pypdf library to parse PDF. Per https://www.reddit.com/r/LangChain/comments/1fsd1yw/comment/lpsoz33/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button, PyPdf performed best
+
+
+from pypdf import PdfReader
+
+
+def readFile(filepath: str):
+    reader = PdfReader(filepath)
+    print(f"# of pages read: {len(reader.pages)}")
+    print(reader.get_page(1))
+
+readFile('docs/IM-38MURA-02.pdf')
