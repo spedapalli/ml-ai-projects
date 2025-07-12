@@ -47,4 +47,5 @@ Our choice of model is `Decision Tree` based on its Accuracy which is very close
 - Please see above section Feature Engineering.
 
 ## Code : 
+NOTE : To run the model, please extract the data/bank-additional-full.csv.zip.
 [Jupyter Notebook](bank_direct_marketing.ipynb)
