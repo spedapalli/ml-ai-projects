@@ -1,0 +1,51 @@
+# Define the secrets - works only in SWARMs it looks like
+secrets:
+  aws_secrets:
+    file: ./app/resources/aws_secrets.txt
+
+services:
+  app:
+    build: ./app
+    ports:
+      - "8000:8000"
+    networks:
+      - net-gene-exp-4-tumor
+
+  ui:
+    build: ./ui
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://app:8000
+    networks:
+      - net-gene-exp-4-tumor
+    depends_on:
+      - app
+
+networks:
+  net-gene-exp-4-tumor:
+    driver: bridge
+
+
+  # web:
+
+  # gene-exp-4-tumor:
+  #   image: gene-exp-4-tumor:latest
+  #   environment:
+  #     - PYTHONUNBUFFERED=1
+  #   # Grant the app access to Secrets defined above
+  #   secrets:
+  #     - source : aws_secrets
+  #       target : /run/secrets/aws_secrets
+  #       uid: "1234567890098765"
+  #       # gid: ""
+  #       mode: 0400
+
+    #env_file:
+    #  - .env
+    # secrets:
+    #   - db_password
+
+# secrets:
+#   app_secrets_file:
+#     file: ./.env  #TODO: point to actial devops repo

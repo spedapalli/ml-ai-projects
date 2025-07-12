@@ -15,18 +15,21 @@ RUN apt-get update && apt-get install -y \
 RUN pip install matplotlib
 
 # FROM python:3.13.0-alpine
-WORKDIR /app/src
+WORKDIR /app
 
 #COPY --exclude=data/*.csv --exclude=models/*.pkl . .
-COPY src /app/src/
-COPY resources /app/.
+COPY src /app/src
+
+COPY resources /app/resources/
 COPY ./pyproject.toml /app/.
 # COPY .env /app/.
 
 COPY requirements.txt /app/.
-RUN pip install -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Expose the port
-EXPOSE 5000
+EXPOSE 8000
 
-CMD ["python", "main.py"]
+CMD ["uvicorn", "--app-dir", "src", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+# CMD ["python", "src/main.py"]

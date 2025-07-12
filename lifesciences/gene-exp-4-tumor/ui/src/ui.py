@@ -1,11 +1,16 @@
+import os
 import streamlit as st
 import requests
 import pandas as pd
 from time import time
 from datetime import datetime
 from io import BytesIO
+from dotenv import load_dotenv
 
-DEFAULT_API_URL = "http://127.0.0.1:8000/predict"
+
+load_dotenv()
+#DEFAULT_API_URL = "http://127.0.0.1:8000/predict"
+DEFAULT_API_URL = os.getenv('API_URL')
 
 
 # sourced from claude
@@ -106,6 +111,7 @@ def main():
         st.markdown("---")
 
         # API Status check
+        print("API URL 1= ", api_url)
         if st.button("Test API Connection"):
             with st.spinner("Testing connection....."):
                 try:
@@ -114,8 +120,8 @@ def main():
                         st.success('API is reachable')
                     else :
                         st.warning(f'API returned status code {response.status_code}')
-                except:
-                    st.error('Cannot reach API URL')
+                except Exception as e:
+                    st.error(f'Cannot reach API URL {e}')
 
 
     # Main body on the page
@@ -182,18 +188,20 @@ def main():
                 #     else:
                 #         st.write("No numeric columns found for statistics")
 
-            except:
+            except Exception as e:
                 st.error(f"Error reading CSV file: {str(e)}")
                 return
 
     with col2:
         st.subheader("Predict which Cancer Tumor it could be")
 
+        print("API URL 2= ", api_url)
+
         if uploaded_file is not None:
             if st.button("Get Prediction", type='primary', use_container_width=True):
                 with st.spinner("Processing...."):
                     success, result, response_time = call_prediction_api(uploaded_file=uploaded_file,
-                                                                        api_url=DEFAULT_API_URL,
+                                                                        api_url= api_url, # DEFAULT_API_URL,
                                                                         timeout=timeout)
 
                     if success:

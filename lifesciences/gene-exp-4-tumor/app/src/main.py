@@ -11,6 +11,7 @@ from request.independent_features_builder import IndependentFeaturesBuilder
 from adapters.ModelsReader import ModelsReader
 from utils.AppConfigParser import AppConfigParser
 from utils.SecretsLoader import SecretsLoader
+from fastapi.middleware.cors import CORSMiddleware
 
 
 LOCAL_MODELS_DIR = './models/'
@@ -25,13 +26,25 @@ model_reader = ModelsReader(config_parser, secrets_loader)
 
 app = FastAPI()
 
+# origins = [
+#     "http://localhost:8501",
+#     "http://gene-exp-4-tumor-ui-1:8501"
+# ]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 @app.get('/')
 def home():
     print('Home screen.......')
     return 'test'
 
 
-@app.post('/predict')
+@app.post('/predict', json='data')
 async def predict_xgb(file: UploadFile = File(...)) -> JSONResponse:
     '''
     @param file : CSV file containing the 18604 gene expressions

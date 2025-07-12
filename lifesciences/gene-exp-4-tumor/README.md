@@ -130,20 +130,22 @@ NOTE: All the scores are results obtained on `test` data, after the model was tr
 - data-analysis : This folder is created when the steps in the IPYNB notebooks are run. This dir is used as a place holder for analysis and hence not checked into Git.
 
 #### Running the Application :
-- To run the Jupyter notebooks please follow the standard process of opening the file and executing each step in there.
+- Modeling : To run the Jupyter notebooks : 
+    - Please download the data from https://archive.ics.uci.edu/dataset/401/gene+expression+cancer+rna+seq. This compressed file is ~70MB and hence not pushed to Git repo.
+    - Follow the standard process of opening the file and executing each step in there.
 - To run the Application aka with web interface, follow below steps :
     - API :
-        - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `uvicorn --app-dir ./src main:app --reload --host 127.0.0.1 --port 8000` Note the URL and port are optional and these values shown here are default values.
+        - Open a terminal and `cd` to the directory `gene-exp-4-tumor/app`. Run the cmd `uvicorn --app-dir ./src main:app --reload --host 127.0.0.1 --port 8000` Note the URL and port are optional and these values shown here are default values.
         - Open browser and access the URL http://127.0.0.1:8000.
     - Web app :
-        - Open a terminal and `cd` to the directory `gene-exp-4-tumor`. Run the cmd `streamlit run src/ui.py`.
+        - Open a terminal and `cd` to the directory `gene-exp-4-tumor/ui`. Run the cmd `streamlit run src/ui.py`.
         - Above should automatically open a browser window. If not, type `http://localhost:8501/` in your browser address bar.
         - Upload a CSV file with 18604 columns of gene expressions. In `data` directory there is a test file `xgb_X_after_pca_dataset.csv` you may use.
         - Click on **Predict** button. The table output is in the order in which the records are in the input CSV file.
     - To run the tests, `cd` to the project root directory in terminal. Execute `pytest` or if print statements are needed on console type `pytest -s`.
     - To Dockerize the app :
-        - Build the docker app, `docker build -t gene-exp-4-tumor .`.
-        - Follow
+        - Build the docker app, `docker-compose up --build`. This not only builds the app, but also runs both - backend and UI servers.
+        - NOTE the server, by default, runs on port 8000 for app (backend) and 8501 for ui (frontend), and the local host(laptop) port is also set to the default ports i.e 8000 for app and 8501 for ui.
 ![Web interface](./images/web_interface.jpg)
 
 ##### Contact and Further Information

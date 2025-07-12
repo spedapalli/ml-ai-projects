@@ -1,6 +1,7 @@
 import os
 import threading
 from typing import Dict
+from dotenv import load_dotenv
 
 
 # using metaclass to control the creation of the SecretsLoader class
@@ -27,11 +28,13 @@ class SecretsLoader (metaclass=SecretsLoaderMetaClass):
 
 
     def load_secrets(self, file_path='/run/secrets/app_secrets'):
+
         if (os.path.isfile(file_path)):
             print(f"file {file_path} is found to exist. Loading secrets from the file.")
             self.load_from_secrets_file(file_path)
         else :
             print(f"File {file_path} was not found. Hence loading from environment.")
+            load_dotenv()
             self.load_from_env()
 
 
@@ -40,6 +43,7 @@ class SecretsLoader (metaclass=SecretsLoaderMetaClass):
             with open(file_path) as file :
                 content = file.read()
                 for line in content.splitlines() :
+                    print(f"{'=' * 20} Processing line {line} {'=' * 20}")
                     if '=' in line :
                         key, value = line.split('=', 1)
                         if key == 'AWS_ACCESS_KEY_ID':
@@ -55,6 +59,7 @@ class SecretsLoader (metaclass=SecretsLoaderMetaClass):
 
 
     def load_from_env(self):
+        # make sure these env vars are not set on terminal, which takes precedence over .env file
         self.AWS_ACCESS_KEY= os.getenv('AWS_ACCESS_KEY_ID')
         self.AWS_SECRET_ACCESS_KEY= os.getenv('AWS_SECRET_ACCESS_KEY')
 
