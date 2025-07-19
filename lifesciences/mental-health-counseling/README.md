@@ -13,6 +13,7 @@ The chosen model for sentiment analysis is `sid321axn/Bio_ClinicalBERT-finetuned
 
 #### Data Sources
 Data used for testing the model is from Kaggle website - https://www.kaggle.com/datasets/thedevastator/nlp-mental-health-conversations/data. It contains primarily 2 fields "Context" and "Response". 
+
 The model is input with "Context", which represents the patient's feelings, and it outputs the Sentiment category along with its confidence in the prediction.
 
 
@@ -30,12 +31,14 @@ The model is input with "Context", which represents the patient's feelings, and 
 
 #### Results
 The model successfully provides the sentiment of patient based on their feelings, along with the confidence score.
-![UI Screenshot](image.png)
+![UI Screenshot](images/UIScreenshot.jpg)
+
+**NOTE**: From my testing thus far, the model largely returns -ve feelings, presuming patient is at counseling to get better.
 
 #### Next steps
 1. Separate out the "build", "test" and "runtime" dependencies for `app` and `ui`.
 2. Some visualization charts to that could provide a visual perspective to in and out data
-3. Explore other models out there that could potentially do a better job.
+3. Explore other models out there that could potentially do a better job, for eg: feelings can also be positive and current model does not support positive feelings.
 
 #### Outline of project
 - Project is built on Python tech stack using its `uv` package manager, `fastapi` for APIs, and `Streamlit` for UI

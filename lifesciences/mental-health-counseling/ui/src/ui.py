@@ -39,7 +39,7 @@ def main():
 
     # st.header("Text Input")
     user_input = st.text_area("Enter Patient's statement here", height=300, placeholder="Type or paste text here..")
-    get_sentiment_button = st.button("Get Patient Sentiment", use_container_width=True)
+    get_sentiment_button = st.button("Get Patient Sentiment", use_container_width=False)
 
     if get_sentiment_button and user_input:
         success, patient_sentiment = call_sentiment_category(user_input, f"{DEFAULT_API_URL}/sentiment_category")
@@ -56,7 +56,7 @@ def main():
             st.metric("Sentiment", label)
             st.metric("Confidence", confidence)
             if summarized_text.strip():
-                st.metric("Summarized Text", summarized_text)
+                st.text_area("Summarized Text", summarized_text, disabled=True)
             
             # st.write(patient_sentiment)
         else:
