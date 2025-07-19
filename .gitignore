@@ -8,6 +8,7 @@ lifesciences/gene-exp-4-tumor/TCGA-PANCAN-HiSeq-801x20531/unc.edu_PANCAN_Illumin
 lifesciences/gene-exp-4-tumor/data-analysis/**
 lifesciences/gene-exp-4-tumor/models/**
 
+lifesciences/mental-health-counseling/data/nlp-mental-health-conversations/**
 
 RAG/PdfIngester/dist/**
 

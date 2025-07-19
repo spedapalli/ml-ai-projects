@@ -1,4 +1,4 @@
-import opendatasets as od 
+
 import pandas as pd 
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
@@ -22,9 +22,9 @@ import token
 
 
 
-DATA_DIR = '../../data'
 
 class HealthConversationCategorizer:
+    DATA_DIR = '../../data'
 
     def __init__(self, model_name:str, max_tokens:int = 512):
         #pre-trained model used for sentiment analysis
@@ -54,14 +54,14 @@ class HealthConversationCategorizer:
         tokens = word_tokenize(text.lower())
         tagged_tokens = pos_tag(tokens)
         lemmatized = [
-            self.lemmatizer.lemmatize(token, self.get_wordnet_pos(pos))
+            self.lemmatizer.lemmatize(token, self._get_wordnet_pos(pos))
             for token, pos in tagged_tokens
             if token.isalpha()
         ]
         return ' '.join(lemmatized)
 
 
-    def _summarize_text(text: str, num_sentences: int) -> str:
+    def _summarize_text(self, text: str, num_sentences: int) -> str:
         sentences = sent_tokenize(text)
         stop_words = set(stopwords.words('english'))
         word_frequencies = defaultdict(int) # 
@@ -117,7 +117,7 @@ class HealthConversationCategorizer:
         Returns:
             Dict: _description_
         """
-        cls_pipeline = self.get_model_pipeline()
+        cls_pipeline = self._get_model_pipeline()
         sentiment = cls_pipeline(text)
 
         # print(f"Sentiment for index {index}: Label={sentiment[0]['label']}, Score={sentiment[0]['score']} ")
@@ -140,11 +140,12 @@ class HealthConversationCategorizer:
         sumtext_dict = defaultdict(str)
         # for now summarizing text only if sentence goes over the # of tokens the model is trained for. 
         if len(text.split()) > self.batch_size:
-            text = self.summarize_text(self, text, num_sentences=self.num_sentences)
+            print("num_sentences: ", self.num_sentences)
+            text = self._summarize_text(text, num_sentences=self.num_sentences)
             sumtext_dict['SummarizedText'] = text
 
-        text = self.lemmitize(text)
-        sentiment:Dict = self.get_sentiment(text)
+        text = self._lemmitize(text)
+        sentiment:Dict = self._get_sentiment(text)
         sentiment.update(sumtext_dict)
 
         return sentiment
@@ -172,7 +173,7 @@ class HealthConversationCategorizer:
         return row
     
 
-    def get_conversation_categories(self, df: pd.DataFrame) -> pd.DataFrame :
+    async def get_conversation_categories(self, df: pd.DataFrame) -> pd.DataFrame :
         """Given a DataFrame consisting of column `Context`, the function identifies the sentiment of the 
         text in this column for each row and returns the sentiment value along with confidence score of this
         prediction and a summarized text if the original text is too long and had to be modified to process
@@ -194,17 +195,6 @@ class HealthConversationCategorizer:
 
 
 def main():
-    CSV_DATA_DIR = DATA_DIR + '/nlp-mental-health-conversations'
-
-    # 
-    dataset_url = 'https://www.kaggle.com/datasets/thedevastator/nlp-mental-health-conversations/data'
-    od.download(dataset_url, data_dir=DATA_DIR)
-    df:pd.DataFrame = pd.read_csv(CSV_DATA_DIR + '/train.csv')
-
-    zero_txt_indexes = df[df['Response'] == '0'].index.tolist()
-    df_clean = df.dropna()
-    df_clean = df_clean.drop(index=zero_txt_indexes)
-
     model_name = "sid321axn/Bio_ClinicalBERT-finetuned-medicalcondition"
     # sentiment_model = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 
@@ -220,7 +210,9 @@ def main():
     sentiment = categorizer.get_conversation_category(long_text)
     print("Sentiment: ", sentiment)
 
-    # df_clean.to_csv(f"{DATA_DIR}/output/mental_health_convo_categ.csv")
+
+if __name__ == "__main__":
+    main()
 
 
 
