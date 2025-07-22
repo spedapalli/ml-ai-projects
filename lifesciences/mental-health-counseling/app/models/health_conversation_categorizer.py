@@ -195,6 +195,7 @@ class HealthConversationCategorizer:
 
 
 def main():
+    # REF: https://stackoverflow.com/a/75499889
     model_name = "sid321axn/Bio_ClinicalBERT-finetuned-medicalcondition"
     # sentiment_model = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 
@@ -206,6 +207,7 @@ def main():
         My mom went back to prison again for drugs, and while she was in there, I moved in with my dad’s mom (the one who lived just down the road) because I trust her, her house is stable, and she's more nurturing, understanding, and loving then my other grandparents. I also stay at my boyfriend’s a lot. Now that my mom is out of prison, she's trying to control every aspect of my life. 
         She’s trying to make me move back home out of Susan's house, and I don't want to. I don't like it there. They condone drug abuse and many other things, and I'm just not comfortable. She's even threatened to call the police and say I'm a runaway because she has custody of me. My boyfriend has always had this picture-perfect life, and his family are strict Christians. 
         One time, his mom even went as far as to say that if he and I break up, if we were having sex, I would say that he", "raped me. I've got so many problems I don't even know what to do.'''
+
 
     sentiment = categorizer.get_conversation_category(long_text)
     print("Sentiment: ", sentiment)

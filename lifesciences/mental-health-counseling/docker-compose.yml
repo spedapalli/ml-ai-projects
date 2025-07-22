@@ -1,0 +1,26 @@
+services:
+  counseling-app:
+    build: 
+      #context: ./app
+      dockerfile: ./app/Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - net-medical-counseling
+
+  ui:
+    build: 
+      #context: ./ui
+      dockerfile: ./ui/Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://counseling-app:8000
+    networks:
+      - net-medical-counseling
+    depends_on:
+      - counseling-app
+
+networks:
+  net-medical-counseling:
+    driver: bridge

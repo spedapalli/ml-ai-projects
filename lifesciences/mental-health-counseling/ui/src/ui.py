@@ -1,8 +1,10 @@
 import streamlit as st
 import requests
 from time import time 
+import os
 
-DEFAULT_API_URL = "http://127.0.0.1:8000"
+# DEFAULT_API_URL = "http://127.0.0.1:8000"
+DEFAULT_API_URL = os.getenv('API_URL')
 
 def call_sentiment_category(text:str, api_url:str, timeout:int=30):
     try:
@@ -27,7 +29,7 @@ def call_sentiment_category(text:str, api_url:str, timeout:int=30):
     except requests.exceptions.ConnectionError:
         return False, f"Unable to connect to API {api_url}. Make sure the server is up and running"
     except requests.exceptions.Timeout:
-        return False, f"Request timed out after {timeout} seconds"
+        return False, f"Request to {api_url} timed out after {timeout} seconds"
     except Exception as e:
         return False, f"Error: {str(e)}"
     
@@ -60,7 +62,7 @@ def main():
             
             # st.write(patient_sentiment)
         else:
-            st.error("Failed to get valid response from the API")
+            st.error(f"Failed to get valid response from the API {DEFAULT_API_URL}")
     elif get_sentiment_button and not user_input:
         st.warning("Please enter some text to process")
     elif not get_sentiment_button :

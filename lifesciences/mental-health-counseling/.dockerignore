@@ -1,0 +1,26 @@
+# exclude ops files
+.pytest_cache
+.venv
+.DS_Store
+
+#
+.git 
+.gitignore 
+./app/Dockerfile
+./ui/Dockerfile
+docker-compose*
+
+
+# Exclude Readme
+README.md 
+
+
+# data dir - given we dont need it when using UI
+data/
+
+# images
+images/
+
+
+# test dir
+app/test/
