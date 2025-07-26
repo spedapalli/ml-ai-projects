@@ -68,7 +68,7 @@ The model successfully provides the sentiment of patient based on their feelings
     - Enter text in the text box on the UI page. Click on the button below it. Further below you should see the results, the patient's sentiment prediction as a label, the model's confidence on this prediction and if the text had to be modified the text, further below.
 
 - Dockerize : 
-    - In terminal, run the cmd `docker-compose up --build | tee dockercompose.log`. This will kick off both UI and APP servers, with a network bridge between the two.
+    - In terminal, run the cmd `docker-compose up --build | tee dockercompose.log`. This will kick off both UI and APP servers, with a network bridge between the two. The app has a docker pod name `med-counseling-app` while the UI has `med-counseling-ui`. The App server itself is given the name `counseling-app` and hence the API server is available at http://counseling-app:8000.
     - NOTE : The Python script `app/setup.py` is not required. #TODO : This diff between local and dockerize needs to be cleaned up later.
 
 NOTE: Please make sure you do not have conda env or other Python package managers in your default environment PATH since if they precede the PATH before this project's virtual env, they could hijack all the commands and mess up your other environment(s).
