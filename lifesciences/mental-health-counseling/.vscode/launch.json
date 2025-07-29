@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--app-image", "381213352543.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-app",
+                "--ui-image", "381213352543.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-ui"
+            ]
+        }
+    ]
+}
