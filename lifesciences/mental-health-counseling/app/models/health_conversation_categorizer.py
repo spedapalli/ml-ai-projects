@@ -195,7 +195,7 @@ class HealthConversationCategorizer:
 
 
 def main():
-    # REF: https://stackoverflow.com/a/75499889
+    
     model_name = "sid321axn/Bio_ClinicalBERT-finetuned-medicalcondition"
     # sentiment_model = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 

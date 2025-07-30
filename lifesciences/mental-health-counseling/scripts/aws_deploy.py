@@ -13,6 +13,8 @@ import argparse
 import subprocess
 import json
 
+from networkx import clustering
+
 
 class AWSDockerDeployer:
 
@@ -480,30 +482,37 @@ class AWSDockerDeployer:
         ui_tg_arn = ui_tg_response['TargetGroups'][0]['TargetGroupArn']
         
         # UI - Create listener
-        self.elbv2.create_listener(
-            LoadBalancerArn=alb_arn,
-            Protocol='HTTP',
-            Port=80,
-            DefaultActions=[
-                {
-                    'Type': 'forward',
-                    'TargetGroupArn': ui_tg_arn # app_tg_arn
-                }
-            ]
-        )
+        try : 
+            self.elbv2.create_listener(
+                LoadBalancerArn=alb_arn,
+                Protocol='HTTP',
+                Port=80,
+                DefaultActions=[
+                    {
+                        'Type': 'forward',
+                        'TargetGroupArn': ui_tg_arn # app_tg_arn
+                    }
+                ]
+            )
+        except self.elbv2.exceptions.DuplicateListenerException as de:
+            print(f"++++++++++++++++++++ Load balancer {alb_arn} has Listener already registered on port 80 ++++++++++++++++++++")
+
 
         # App - Create Listener
-        self.elbv2.create_listener(
-            LoadBalancerArn=alb_arn,
-            Protocol='HTTP',
-            Port=8000,
-            DefaultActions=[
-                {
-                    'Type': 'forward',
-                    'TargetGroupArn': app_tg_arn
-                }
-            ]
-        )
+        try: 
+            self.elbv2.create_listener(
+                LoadBalancerArn=alb_arn,
+                Protocol='HTTP',
+                Port=8000,
+                DefaultActions=[
+                    {
+                        'Type': 'forward',
+                        'TargetGroupArn': app_tg_arn
+                    }
+                ]
+            )
+        except self.elbv2.exceptions.DuplicateListenerException as de:
+            print(f"++++++++++++++++++++ Load balancer {alb_arn} has Listener already registered on port 8000 ++++++++++++++++++++")
         
         print(f"Created ALB: {alb_dns}")
         
@@ -522,7 +531,7 @@ class AWSDockerDeployer:
         
         service_config = {
             'cluster': self.cluster_name,
-            'serviceName': f'{self.cluster_name}-{service_name}',
+            'serviceName': service_name,
             'taskDefinition': task_def_arn,
             'desiredCount': 1,
             'launchType': 'FARGATE',
@@ -542,9 +551,93 @@ class AWSDockerDeployer:
             ]
         }
         
-        self.ecs.create_service(**service_config)
-        print(f"Created ECS service: {service_name}")
+        # check if svc exists
+        svc_existing = self.ecs.describe_services(cluster=self.cluster_name, services=[service_name])
+        if len(svc_existing['services']) == 0:
+            ecs_response = self.ecs.create_service(**service_config)
+            print(f"Created ECS service: {service_name}")
+        else : 
+            service_config = {
+                'cluster': self.cluster_name,
+                'service': service_name,
+                'taskDefinition': task_def_arn,
+                'desiredCount': 1,
+                'networkConfiguration': {
+                    'awsvpcConfiguration': {
+                        'subnets': subnet_ids,
+                        'securityGroups': [ecs_sg_id],
+                        'assignPublicIp': public_ip # 'ENABLED' if service_name == 'ui' 'DISABLED'
+                    }
+                },
+                'loadBalancers': [
+                    {
+                        'targetGroupArn': target_group_arn,
+                        'containerName': service_name,
+                        'containerPort': port # 8000 if service_name == 'app' else 8501
+                    }
+                ]
+            }
+            ecs_response = self.ecs.update_service(**service_config)
+            print(f"Updated ECS service: {service_name}")
+        return ecs_response
     
+
+    def _get_ecs_task_public_ip(self, service_name:str) -> str : 
+        str_ELASTIC_NET_INTF = 'ElasticNetworkInterface'
+        str_NETWORK_INTF = 'NetworkInterfaces'
+        str_NETWORK_INTF_ID = 'networkInterfaceId'
+        str_ASSOCIATION = 'Association'
+
+        try : 
+            tasks_list = self.ecs.list_tasks(
+                cluster=self.cluster_name,
+                serviceName=service_name,
+                desiredStatus='RUNNING'
+            )
+
+            if not tasks_list['taskArns']:
+                print(f"No running tasks found for service {service_name} in cluster {self.cluster_name}")
+                return None
+            
+            task_arn = tasks_list['taskArns'][0]
+
+            task_desc = self.ecs.describe_tasks(cluster=self.cluster_name, 
+                                                tasks=[task_arn])
+            
+            # extract network interface id
+            net_inf_id = None
+            if task_desc['tasks']:
+                for attach in task_desc['tasks'][0]['attachments']:
+                    if attach['type'] == str_ELASTIC_NET_INTF:
+                        for detail in attach['details']:
+                            if (detail['name'] == str_NETWORK_INTF_ID):
+                                net_intf_id = detail['value']
+                                break
+                    if net_intf_id:
+                        break
+
+            if net_intf_id:
+                net_intf_desc = self.ec2.describe_network_interfaces(
+                    NetworkInterfaceIds = [net_intf_id]
+                )
+                public_ip = None
+                if net_intf_desc[str_NETWORK_INTF]:
+                    if str_ASSOCIATION in net_intf_desc[str_NETWORK_INTF][0]:
+                        public_ip = net_intf_desc[str_NETWORK_INTF][0][str_ASSOCIATION]['PublicIp']
+
+                    if public_ip:
+                        print("Public IP Found")
+                        return public_ip
+                    else:
+                        print(f"No public IP address found for task {task_arn}")
+                        return None
+            else : 
+                print(f"Unable to find a Network interface Id for task {task_arn}")
+                return None
+        except Exception as e:
+            print(f"Unable to get the Public IP for service {service_name}")
+            raise e
+
 
 
     def deploy_infrastructure(self, repo_uris: Dict[str, str]):
@@ -562,7 +655,7 @@ class AWSDockerDeployer:
         iam_info = self._create_iam_roles()
         
         # Create CloudWatch log groups
-        self._create_cloudwatch_log_groups([AWSDockerDeployer.APP_REPOSITORY, AWSDockerDeployer.UI_REPOSITORY])
+        self._create_cloudwatch_log_groups([AWSDockerDeployer.APP_TASK, AWSDockerDeployer.UI_TASK])
         
         # Create ECS cluster
         self._create_ecs_cluster()
@@ -580,9 +673,34 @@ class AWSDockerDeployer:
             iam_info['task_role_arn']
         )
 
+        # Create load balancer
+        alb_info = self._create_load_balancer(
+            vpc_info['vpc_id'],
+            vpc_info['subnet_ids'],
+            sg_info['alb_sg_id']
+        )
+        
+        # Create ECS services
+        # app_service_name= f'{self.cluster_name}-{AWSDockerDeployer.APP_TASK}'
+        app_service_name = AWSDockerDeployer.APP_TASK
+        app_ecs_response = self._create_ecs_service(
+            service_name=app_service_name,
+            task_def_arn=app_task_arn,
+            subnet_ids=vpc_info['subnet_ids'],
+            ecs_sg_id=sg_info['ecs_sg_id'],
+            target_group_arn=alb_info['app_tg_arn'], 
+            public_ip='ENABLED',   # #TODO at some pt this backend UI shud be restricted to certain users only
+            port=8000
+        )
+        
         # create env vars
+        public_ip = self._get_ecs_task_public_ip(service_name=app_service_name)
         #TODO : Below URL needs to be determined from the above app task definition
-        ui_env_values: dict = {"API_URL": "http://3.93.163.25:8000"}
+        # ui_env_values: dict = {"API_URL": "http://3.93.163.25:8000"}
+        ui_env_values: dict = {}
+        if public_ip:
+            print(f"Adding App IP {public_ip} as an ENV var to UI service {AWSDockerDeployer.UI_TASK}")
+            ui_env_values["API_URL"]= public_ip
 
         ui_task_arn = self._create_task_definition(
             AWSDockerDeployer.UI_TASK, 
@@ -593,25 +711,7 @@ class AWSDockerDeployer:
             ui_env_values
         )
         
-        # Create load balancer
-        alb_info = self._create_load_balancer(
-            vpc_info['vpc_id'],
-            vpc_info['subnet_ids'],
-            sg_info['alb_sg_id']
-        )
-        
-        # Create ECS services
-        self._create_ecs_service(
-            service_name=AWSDockerDeployer.APP_TASK,
-            task_def_arn=app_task_arn,
-            subnet_ids=vpc_info['subnet_ids'],
-            ecs_sg_id=sg_info['ecs_sg_id'],
-            target_group_arn=alb_info['app_tg_arn'], 
-            public_ip='ENABLED',   # #TODO at some pt this backend UI shud be restricted to certain users only
-            port=8000
-        )
-        
-        self._create_ecs_service(
+        ui_ecs_response = self._create_ecs_service(
             service_name=AWSDockerDeployer.UI_TASK,
             task_def_arn=ui_task_arn,
             subnet_ids=vpc_info['subnet_ids'],
