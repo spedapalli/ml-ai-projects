@@ -1,12 +1,23 @@
 # ml-ai
 Code associated to some of the ML / AI Projects I work on during my spare time. Each folder is a ML or an AI project of its own. Below is a brief outline of each project.
 
+### lifesciences/mental-health-counseling
+The model, a pre-trained one, classifies Patient's current feelings based on their input.
+
+Key highlights : 
+- UI and backend. Model initial exploration and testing was conducted in Jupyter notebook. Later on backend code was built in python.
+- Model uses a pre-trained model
+- Ops : Supports docker builds and deploy to AWS, all scripted out.
+
 ### lifesciences/gene-exp-4-tumor : 
 A Classification problem that studies 5 types of cancers and their underlying gene expressions.
 
-This is a webapp with UI and backend APIs. Backend uses the most efficient model to predict the tumor given a set of gene expressions. The model Analysis is done in Jupyter notebook, serialized as a pickle file and stored in S3 for the backend to retrieve and apply.
+Key Highlights : 
+- UI and backend
+- A number of models are trained to identify best performing model, which is stored as a .pkl file in AWS S3.
+- Above .pkl file is used on backed to classify / predict tumor given gene expressions as input
+- Ops : Can be run independentally or using Docker container
 
-Application is also dockerized.
 
 ![lifesciences/gene-exp-4-tumor](lifesciences/gene-exp-4-tumor/)
 

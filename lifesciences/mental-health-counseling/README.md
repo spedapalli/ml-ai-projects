@@ -88,7 +88,7 @@ The model successfully provides the sentiment of patient based on their feelings
         - Creates security groups and IAM roles
         - Creates CloudWatch log groups for `app` and `ui`
         - Creates ECS cluster (name used is embedded in the code as a constant)
-        - Creates Task Definitions with appropriate security groups and registry URIs. For UI also configures the backend URL as an ENV variable. #TODO - fix hardcoded value to make it dynamic
+        - Creates Task Definitions with appropriate security groups and registry URIs. For UI also configures the backend URL as an ENV variable.
         - Creates Load Balancer with VPC and Subnet details created above. For each task/service, creates listener that routes requests to the right task's service.
         - Creates ECS service for each of the task definitions (app and ui), and provisions the same on the Cluster created above.
     - NOTE : If you have previously created the images, use this command, to avoid duplication and save time : `python scripts/aws_deploy.py --app-image="<Your AWS Acct ID>.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-app" --ui-image="<Your AWS Acct ID>.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-ui"`. Replace the <Your AWS Acct ID> with the numeric Id that AWS gives for your account.
