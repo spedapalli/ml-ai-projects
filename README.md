@@ -9,6 +9,8 @@ Key highlights :
 - Model uses a pre-trained model
 - Ops : Supports docker builds and deploy to AWS, all scripted out.
 
+![lifesciences/mental-health-counseling](lifesciences/mental-health-counseling/)
+
 ### lifesciences/gene-exp-4-tumor : 
 A Classification problem that studies 5 types of cancers and their underlying gene expressions.
 
