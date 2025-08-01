@@ -5,8 +5,8 @@ Code associated to some of the ML / AI Projects I work on during my spare time. 
 The model, a pre-trained one, classifies Patient's current feelings based on their input.
 
 Key highlights : 
-- UI and backend. Model initial exploration and testing was conducted in Jupyter notebook. Later on backend code was built in python.
-- Model uses a pre-trained model
+- UI and backend. Initial exploration and testing of the model was done in Jupyter notebook. Later on transitioned to building backend application.
+- Uses a pre-trained model
 - Ops : Supports docker builds and deploy to AWS, all scripted out.
 
 ![lifesciences/mental-health-counseling](lifesciences/mental-health-counseling/)
