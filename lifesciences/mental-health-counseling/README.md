@@ -45,9 +45,14 @@ The model successfully provides the sentiment of patient based on their feelings
 ### Outline of project
 - Project is built on Python tech stack using its `uv` package manager, `fastapi` for APIs, and `Streamlit` for UI
 - ![app](./app/) : folder contains all the backend code including APIs
-- ![data](./data/) : When the a link is provided to dowload data from the web, the data is persisted into this local folder. This folder also contains `output` folder that contains CSV files output by the model.
-- ![images](./images/) : Images, largely out of the app and in future hopefully charts.
+- ![data](./data/) : When the a link is provided to dowload data from the web, the data is persisted into this local folder. This folder also contains `output` folder that contains CSV files output by the model
+- ![images](./images/) : Images, largely out of the app and in future hopefully charts
 - ![ui](./ui/) : Contains all UI related code
+- ![scripts/ansible](./scripts/ansible/) : All Continuous deployment scripts associated to Ansible tool
+- ![scripts/aws_config](./scripts/aws_config/) : Config steps manually performed in AWS, especially giving the AWS user running the scripts, the necessary permissions
+- ![scripts/python](./scripts/python/) : Python scripts to achieve Continuous Deployment. This is deprecated and here more as a reference to understand AWS object relationships
+- ![scripts/terraform] : Terraform related files for AWS continuous deployment
+- ![scripts/*.*](./scripts/) : Continuous deployment root scripts and other ancillary needs.
 - ![requirements.txt](requirements.txt) : Contains all the dependencies. If using `uv` this file may be used to setup the virtual environment for this project.
 - ![pyproject.toml](pyproject.toml) : `uv` package manager config file to track the sources, dependencies, test directory etc..
 - ![setup](setup.py) : Script that needs to be run to download some of the needed libraries to format / scale / summarize the text.
@@ -84,13 +89,24 @@ In terminal, run the cmd
 - Before running the command, make sure the AWS user you plan to use has necessary permissions aka policies assigned.
 - Also NOTE that the default runtime architecture is `linux/arm64`
 - Run `aws configure` to configure the user you plan to use to run below operations.
+- The AWS user used for this MUST have a good set of permission policies assigned. For custom policies manually assigned, please refer to `scripts/aws_config/policies_custom.json` file. Beyond these my user was also assigned permission policies to "EC2 Container Registry", AWSEC2, AWSECS, AWSCodeDeployRoleForCloudFormation, AWSOpsWorksCloudWatchLogs, IAMReadOnlyAccess. Please assign the policies as you see the need.
 - You dont need to login on the terminal using `aws ecr get-login-password ....` since the script will login using user credentials provided in above step.
 - Also, as always, please activate the virtual env using `source .venv/bin/activate`. After which run the `scripts/requirements-aws.txt` script to download necessary libraries (cmd : `uv pip install -r requirements-aws.txt`).
 
 #### Using Terraform and Ansible :  
 - Ensure you have Terraform and Ansible installed.
+- Ensure the scripts are executable, else run `chmod +x scripts/*.sh`
 - In terminal, initialize terraform by executing `cd scripts/terraform`, followed by `terraform init`.
-- Execute `./scripts/deploy.sh`, which kicks of Ansible to choreograph below scripts and their tasks defined within : 
+- Install dependencies `uv pip install scripts/requirements-ansible.txt`
+- Execute `scripts/setup.sh`, which does the following : 
+    - Checks pre-reqs
+    - Create ECR repositories
+    - Sets up dir structure
+    - Optionally create S3 bucket for Terraform state (although I ran Terrform with local state. See `inventory/hosts`)
+    - Update config with AWS Account ID
+    - Update all vars files `vars/dev.yml`, `vars/prod.yml`, `terraform/terraform.tfvars`, 
+- Execute `make deploy ENVIRONMENT=dev` to set the env to which containers will be deployed to. Alternate option is to provide env name in below cmd as shown below.
+- Execute `./scripts/deploy.sh dev` (for deployment into dev environment). You can also run  alternatively before, which kicks of Ansible to choreograph below scripts and their tasks defined within : 
     - `ansible/deploy.yml` : 
         - Initializes the Environment (dev / prod) and associated variables from `ansible/vars/{environment}.yml` file.
         - Builds and pushes the Docker images by executing tasks in `ansible/tasks/build_images.yml`. Here it logs into AWS ECR and pushes the images.

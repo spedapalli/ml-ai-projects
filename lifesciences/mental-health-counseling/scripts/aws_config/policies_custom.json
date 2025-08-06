@@ -1,0 +1,188 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "ecs:PutAttributes",
+                "ecs:UpdateCluster",
+                "ecs:ListAttributes",
+                "ecs:ExecuteCommand",
+                "ecs:ListServiceDeployments",
+                "ecs:UpdateContainerInstancesState",
+                "ecs:UpdateTaskProtection",
+                "ecs:StartTask",
+                "ecs:RegisterContainerInstance",
+                "ecs:DeleteAttributes",
+                "ecs:DescribeTaskSets",
+                "ecs:DeleteCapacityProvider",
+                "ecs:SubmitAttachmentStateChanges",
+                "ecs:Poll",
+                "ecs:UpdateService",
+                "ecs:DescribeCapacityProviders",
+                "ecs:CreateService",
+                "ecs:RunTask",
+                "ecs:ListTasks",
+                "ecs:DescribeClusters",
+                "ecs:RegisterTaskDefinition",
+                "ecs:DescribeServiceDeployments",
+                "ecs:StopTask",
+                "ecs:DescribeServices",
+                "ecs:SubmitContainerStateChange",
+                "ecs:DescribeServiceRevisions",
+                "ecs:DescribeContainerInstances",
+                "ecs:DeregisterContainerInstance",
+                "ecs:DeleteTaskDefinitions",
+                "ecs:DescribeTasks",
+                "ecs:PutClusterCapacityProviders",
+                "ecs:UpdateTaskSet",
+                "ecs:SubmitTaskStateChange",
+                "ecs:GetTaskProtection",
+                "ecs:UpdateClusterSettings",
+                "ecs:CreateCluster",
+                "ecs:UpdateCapacityProvider",
+                "ecs:DeleteService",
+                "ecs:DeleteCluster",
+                "ecs:DeleteTaskSet",
+                "ecs:DescribeClusters",
+                "ecs:ListTagsForResource",
+                "ecs:StartTelemetrySession",
+                "ecs:StopServiceDeployment",
+                "ecs:UpdateContainerAgent",
+                "ecs:ListContainerInstances",
+                "ecs:UpdateServicePrimaryTaskSet"
+            ],
+            "Resource": [
+                "arn:aws:ecs:*:381213352543:service-deployment/*/*/*",
+                "arn:aws:ecs:*:381213352543:capacity-provider/*",
+                "arn:aws:ecs:*:381213352543:task/*/*",
+                "arn:aws:ecs:*:381213352543:cluster/*",
+                "arn:aws:ecs:*:381213352543:task-set/*/*/*",
+                "arn:aws:ecs:*:381213352543:container-instance/*/*",
+                "arn:aws:ecs:*:381213352543:service/*/*",
+                "arn:aws:ecs:*:381213352543:service-revision/*/*/*",
+                "arn:aws:ecs:*:381213352543:task-definition/*:*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "ecs:ListServicesByNamespace",
+                "ecs:DiscoverPollEndpoint",
+                "ecs:PutAccountSettingDefault",
+                "ecs:DescribeTaskDefinition",
+                "ecs:PutAccountSetting",
+                "ecs:ListServices",
+                "ecs:CreateCapacityProvider",
+                "ecs:DeregisterTaskDefinition",
+                "ecs:ListAccountSettings",
+                "ecs:DeleteAccountSetting",
+                "ecs:ListTaskDefinitionFamilies",
+                "ecs:ListTaskDefinitions",
+                "ecs:CreateTaskSet",
+                "ecs:ListClusters"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowCreateRole",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:AttachRolePolicy",
+                "iam:TagRole",
+                "iam:DetachRolePolicy",
+                "iam:DeleteRole"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CloudWatchNetworkFlowMonitorAgentPublishPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "networkflowmonitor:Publish"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AWSXrayReadOnlyAccess",
+            "Effect": "Allow",
+            "Action": [
+                "xray:GetSamplingRules",
+                "xray:GetSamplingTargets",
+                "xray:GetSamplingStatisticSummaries",
+                "xray:BatchGetTraces",
+                "xray:BatchGetTraceSummaryById",
+                "xray:GetDistinctTraceGraphs",
+                "xray:GetServiceGraph",
+                "xray:GetTraceGraph",
+                "xray:GetTraceSummaries",
+                "xray:GetGroups",
+                "xray:GetGroup",
+                "xray:ListTagsForResource",
+                "xray:ListResourcePolicies",
+                "xray:GetTimeSeriesServiceStatistics",
+                "xray:GetInsightSummaries",
+                "xray:GetInsight",
+                "xray:GetInsightEvents",
+                "xray:GetInsightImpactGraph"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Sid": "ResourceGroupsandTagEditorFullAccess",
+            "Effect": "Allow",
+            "Action": [
+                "tag:getResources",
+                "tag:getTagKeys",
+                "tag:getTagValues",
+                "tag:TagResources",
+                "tag:UntagResources",
+                "resource-groups:*",
+                "cloudformation:DescribeStacks",
+                "cloudformation:ListStackResources",
+                "cloudformation:ListStacks"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "SNSFullAccess",
+            "Effect": "Allow",
+            "Action": "sns:*",
+            "Resource": "*"
+        },
+        {
+            "Sid": "GetLogEvents",
+            "Effect": "Allow",
+            "Action": "logs:GetLogEvents",
+            "Resource": "arn:aws:logs:us-east-1:381213352543:log-group:*:log-stream:*"
+        },
+        {
+            "Sid": "AWSOpsWorksCloudWatchLogs",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams",
+                "logs:PutRetentionPolicy",
+                "logs:TagResource",
+                "logs:ListTagsForResource",
+                "logs:DeleteLogGroup"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:*:*"
+            ]
+        },
+        {
+            "Sid": "GatewayRules",
+            "Effect": "Allow",
+            "Action": "route53resolver:ListFirewallRuleGroupAssociations",
+            "Resource": "*"
+        }
+    ]
+}
