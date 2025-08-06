@@ -1,0 +1,57 @@
+# tasks/update_services.yml
+# REF: https://docs.ansible.com/ansible/latest/collections/community/aws/ecs_service_module.html
+
+- name: Update App ECS service
+  ecs_service:
+    name: "{{ project_name }}-app-service"
+    cluster: "{{ ecs_cluster_name }}"
+    task_definition: "{{ project_name }}-app"
+    desired_count: "{{ app_desired_count | default(2) }}"
+    deployment_configuration:
+      minimum_healthy_percent: 50
+      maximum_percent: 200
+    state: present
+    region: "{{ aws_region }}"
+  register: app_service_update
+
+
+- name: Update UI ECS service
+  ecs_service:
+    name: "{{ project_name }}-ui-service"
+    cluster: "{{ ecs_cluster_name }}"
+    task_definition: "{{ project_name }}-ui"
+    desired_count: "{{ ui_desired_count | default(2) }}"
+    deployment_configuration:
+      minimum_healthy_percent: 50
+      maximum_percent: 200
+    state: present
+    region: "{{ aws_region }}"
+  register: ui_service_update
+
+- name: Wait for App service to be stable
+  ecs_service_info:
+    name: "{{ project_name }}-app-service"
+    cluster: "{{ ecs_cluster_name }}"
+    region: "{{ aws_region }}"
+  register: app_service_info
+  until: app_service_info.services[0].deployments | selectattr('status', 'equalto', 'PRIMARY') | list | length == 1
+  retries: 30
+  delay: 30
+
+- name: Wait for UI service to be stable
+  ecs_service_info:
+    name: "{{ project_name }}-ui-service"
+    cluster: "{{ ecs_cluster_name }}"
+    region: "{{ aws_region }}"
+  register: ui_service_info
+  until: ui_service_info.services[0].deployments | selectattr('status', 'equalto', 'PRIMARY') | list | length == 1
+  retries: 30
+  delay: 30
+
+- name: Display deployment URLs
+  debug:
+    msg:
+      - "Deployment completed successfully!"
+      - "App URL: {{ app_url }}"
+      - "UI URL: {{ ui_url }}"
+      - "Load Balancer DNS: {{ load_balancer_dns }}"

@@ -1,0 +1,26 @@
+# -- deploy.yml - Main Ansible playbook --
+- name: Deploy App and UI to AWS ECS Fargate
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files : 
+    - vars/{{ deployment_env }}.yml
+  vars:
+    aws_region: "{{ lookup('env', 'AWS_DEFAULT_REGION') | default('us-east-1') }}"
+    # project_name: "{{ PROJECT_NAME }}"
+    environment: "{{ deployment_env | default('dev') }}"
+    
+  tasks:
+    - name: Include variables {{ environment }}
+      include_vars: "vars/{{ deployment_env }}.yml"
+
+    - name: Build and push Docker images
+      include_tasks: tasks/build_images.yml
+      when: build_images | default(true)
+
+    - name: Deploy infrastructure with Terraform
+      include_tasks: tasks/terraform.yml
+
+    - name: Update ECS services
+      include_tasks: tasks/update_services.yml

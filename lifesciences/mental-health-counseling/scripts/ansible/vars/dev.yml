@@ -1,0 +1,30 @@
+vars: 
+  app_name: med-counseling-cd-app
+  ui_name: med-counseling-cd-ui
+
+aws_account_id: "381213352543"  # Replace with env specific AWS account ID
+aws_region: "us-east-1"
+environment: "dev"
+project_name: "med-counseling-cd"
+
+# ECR Repository names
+ecr_repository_app: "med-counseling-cd-app"
+ecr_repository_ui: "med-counseling-cd-ui"
+# ecr_repository_app: "{{ app_name }}"
+# ecr_repository_ui: "{{ ui_name }}"
+# ui_container_name: "med-counseling-cd-ui" # "{{ ui_name }}"
+
+# Container settings
+memory_mib: 4096
+app_desired_count: 1
+ui_desired_count: 1
+
+# Build settings
+build_images: true
+image_tag: "dev-latest"
+app_dockerfile_path: "./apps/{{ app_name }}"
+ui_dockerfile_path: "./apps/{{ ui_name }}"
+
+# Terraform settings - relative to `ansible` directory
+terraform_project_path: "../terraform"
+# terraform_state_bucket: "your-terraform-state-bucket"  # Uncomment for remote state

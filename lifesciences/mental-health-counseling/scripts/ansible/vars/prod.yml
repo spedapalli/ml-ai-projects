@@ -1,0 +1,24 @@
+define &app_name: med-counseling-cd-app
+define &ui_name: med-counseling-cd-ui
+
+aws_account_id: "381213352543"  # Replace with env AWS account ID
+aws_region: "us-east-1"
+environment: "prod"
+
+# ECR Repository names
+ecr_repository_app: *app_name
+ecr_repository_ui: *ui_name
+
+# Container settings
+app_desired_count: 3
+ui_desired_count: 2
+
+# Build settings
+build_images: true
+image_tag: "prod-{{ ansible_date_time.epoch }}"
+app_dockerfile_path: "./apps/{{ app_name }}"
+ui_dockerfile_path: "./apps/{{ ui_name }}"
+
+# Terraform settings
+terraform_project_path: "./terraform"
+terraform_state_bucket: "your-terraform-state-bucket-prod"

@@ -1,0 +1,61 @@
+# tasks/build_images.yml
+
+- name: Check if Docker is installed
+  command: docker --version -vvv
+  register: docker_version
+  failed_when: false
+
+- name: Fail if Docker is not installed
+  fail:
+    msg: "Docker is not installed or not accessible"
+  when: docker_version.rc != 0
+
+- name: Build App Docker image
+  # vars:
+  #   ansible_python_interpreter: ./.venv/bin/python3.12
+  docker_image:
+    name: "{{ ecr_repository_app }}"
+    tag: "{{ image_tag | default('latest') }}"
+    build:
+      path: "{{ app_dockerfile_path | default('./../../app') }}"
+      dockerfile: Dockerfile
+    source: build
+    push: false
+
+- name: Build UI Docker image
+  docker_image:
+    name: "{{ ecr_repository_ui }}"
+    tag: "{{ image_tag | default('latest') }}"
+    build:
+      path: "{{ ui_dockerfile_path | default('./../../ui') }}"
+      dockerfile: Dockerfile
+    source: build
+    push: false
+
+- name: Get ECR login token
+  command: >
+    aws ecr get-login-password --region {{ aws_region }}
+  register: ecr_token
+  no_log: true
+
+- name: Login to ECR
+  docker_login:
+    registry_url: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
+    username: AWS
+    password: "{{ ecr_token.stdout }}"
+
+- name: Tag and push App image to ECR
+  docker_image:
+    name: "{{ ecr_repository_app }}"
+    tag: "{{ image_tag | default('latest') }}"
+    repository: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repository_app }}"
+    push: true
+    source: local
+
+- name: Tag and push UI image to ECR
+  docker_image:
+    name: "{{ ecr_repository_ui }}"
+    tag: "{{ image_tag | default('latest') }}"
+    repository: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ ecr_repository_ui }}"
+    push: true
+    source: local
