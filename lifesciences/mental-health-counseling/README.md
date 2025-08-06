@@ -79,18 +79,33 @@ The model successfully provides the sentiment of patient based on their feelings
     - Also NOTE that the default runtime architecture is `linux/arm64`
     - Run `aws configure` to configure the user you plan to use to run below operations.
     - You dont need to login on the terminal using `aws ecr get-login-password ....` since the script will login using user credentials provided in above step.
-    - Also, as always, please activate the virtual env using `source .venv/bin/activate`. After which run the `scripts/requirements-aws.txt` script to download necessary libraries.
-    - In terminal, run the command `python scripts/aws_deploy.py`. All the operations are currently defaulted to AWS region `us-east-1`. This command does all of the below : 
-        - Creates ECR repositories, one for the backend and for the UI.
-        - Create docker images of the `app` and `ui`
-        - Pushes the docker images to the ECR repositories
-        - Creates a VPC and subnets. If they already exist, based on naming convention used, it reuses the existing ones.
-        - Creates security groups and IAM roles
-        - Creates CloudWatch log groups for `app` and `ui`
-        - Creates ECS cluster (name used is embedded in the code as a constant)
-        - Creates Task Definitions with appropriate security groups and registry URIs. For UI also configures the backend URL as an ENV variable.
-        - Creates Load Balancer with VPC and Subnet details created above. For each task/service, creates listener that routes requests to the right task's service.
-        - Creates ECS service for each of the task definitions (app and ui), and provisions the same on the Cluster created above.
-    - NOTE : If you have previously created the images, use this command, to avoid duplication and save time : `python scripts/aws_deploy.py --app-image="<Your AWS Acct ID>.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-app" --ui-image="<Your AWS Acct ID>.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-ui"`. Replace the <Your AWS Acct ID> with the numeric Id that AWS gives for your account.
+    - Also, as always, please activate the virtual env using `source .venv/bin/activate`. After which run the `scripts/requirements-aws.txt` script to download necessary libraries (cmd : `uv pip install -r requirements-aws.txt`).
+    - Using Terraform and Ansible : Ansible 
+        - Ensure you have Terraform and Ansible installed.
+        - In terminal, initialize terraform by executing `cd scripts/terraform`, followed by `terraform init`.
+        - Execute `./scripts/deploy.sh`, which kicks of Ansible to choreograph below scripts and their tasks defined within : 
+            - `ansible/deploy.yml` : 
+                - Initializes the Environment (dev / prod) and associated variables from `ansible/vars/{environment}.yml` file.
+                - Builds and pushes the Docker images by executing tasks in `ansible/tasks/build_images.yml`. Here it logs into AWS ECR and pushes the images.
+                - Executes steps defined in `ansible/tasks/terraform.yml` where it initiates Terraform to build out the AWS artifacts as defined in `terraform/main.tf`. This in turn intakes `terraform/terraform.tfvars` file as input for variables.
+                - Finally runs `tasks/update_services.yml` where it updates the ECS services and waits to check if services are up and running and healthy.
+        - The App and UI DNS names are the same. To access App directly use the port 8000
+        - Tech Debt : 
+            - Consolidate vars to avoid duplication and in some places hardcoding
+            - Different DNS names for app and ui ?
+
+    - Using Python script in (deprecated)
+        - In terminal, run the command `python scripts/python/aws_deploy.py`. All the operations are currently defaulted to AWS region `us-east-1`. This command does all of the below : 
+            - Creates ECR repositories, one for the backend and for the UI.
+            - Create docker images of the `app` and `ui`
+            - Pushes the docker images to the ECR repositories
+            - Creates a VPC and subnets. If they already exist, based on naming convention used, it reuses the existing ones.
+            - Creates security groups and IAM roles
+            - Creates CloudWatch log groups for `app` and `ui`
+            - Creates ECS cluster (name used is embedded in the code as a constant)
+            - Creates Task Definitions with appropriate security groups and registry URIs. For UI also configures the backend URL as an ENV variable.
+            - Creates Load Balancer with VPC and Subnet details created above. For each task/service, creates listener that routes requests to the right task's service.
+            - Creates ECS service for each of the task definitions (app and ui), and provisions the same on the Cluster created above.
+        - NOTE : If you have previously created the images, use this command, to avoid duplication and save time : `python scripts/aws_deploy.py --app-image="<Your AWS Acct ID>.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-app" --ui-image="<Your AWS Acct ID>.dkr.ecr.us-east-1.amazonaws.com/med-counseling-cd-ui"`. Replace the <Your AWS Acct ID> with the numeric Id that AWS gives for your account.
 
 NOTE: Please make sure you do not have conda env or other Python package managers in your default environment PATH since if they precede the PATH before this project's virtual env, they could hijack all the commands and mess up your other environment(s).
