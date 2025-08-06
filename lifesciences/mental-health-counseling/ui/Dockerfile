@@ -2,7 +2,11 @@
 FROM python:3.11-slim-bookworm AS builder
 ENV AWS_DEFAULT_REGION=us-east-1
 ENV PYTHONUNBUFFERED=1
-ARG UI_SRC_DIR="ui"
+
+# use below when building using Ansible scripts or locally within ui 
+ARG UI_SRC_DIR="."
+# Use below when running docker cmd from root dir - #TODO need to figure out why the descrepancy
+# ARG UI_SRC_DIR="ui"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -42,5 +46,9 @@ USER uiuser
 # Expose the port
 EXPOSE 8501
 
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+
 # streamlit run src/ui.py
-CMD ["streamlit", "run", "ui/src/ui.py"]
+CMD ["streamlit", "run", "ui/src/ui.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true", "--server.fileWatcherType=none"]

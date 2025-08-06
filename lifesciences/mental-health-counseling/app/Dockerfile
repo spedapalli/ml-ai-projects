@@ -1,10 +1,12 @@
 #FROM alpine:latest
 # Using python-optimized base image (debian bookworm aka v12 os)
-# NOTE: as of Jul 21, all slim bookworm versions hv critical CVEs. For now sticking to 3.11
+# NOTE: as of Jul 21, all slim bookworm versions hv critical CVEs. For this POC sticking to 3.11
 FROM python:3.11-slim-bookworm AS builder
 
-# for local build, i.e docker build within app, this needs to be changed to "."
-ARG APP_SRC_DIR="app"
+# Use when running docker cmd from root dir - Need to standardize with below
+# ARG APP_SRC_DIR="app"
+# Use when running using Ansible scripts or when building locally
+ARG APP_SRC_DIR="."
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -15,6 +17,7 @@ RUN pip install --upgrade pip
 
 WORKDIR /build
 COPY $APP_SRC_DIR/requirements-fastapi.txt .
+# COPY requirements-fastapi.txt .
 # Dont see need for below file given we are using requirements file
 # COPY ./../pyproject.toml /app/.
 
@@ -49,14 +52,16 @@ RUN python -c "import nltk; \
 WORKDIR /app
 
 # Copy application code
-COPY --chown=appuser:appuser app/ .
+# COPY --chown=appuser:appuser app/ .
+COPY --chown=appuser:appuser $APP_SRC_DIR .
 
 # Switch to non-root user
 USER appuser
 
 # Health check
-# HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-#     CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    # CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
+    CMD curl -f http://localhost:8000/health || exit 1
 
 
 # Expose the port
