@@ -17,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-app = FastAPI()
+app = FastAPI(docs_url="/api/docs")
 MODEL_NAME = "sid321axn/Bio_ClinicalBERT-finetuned-medicalcondition"
 
 class TextRequest(BaseModel):
