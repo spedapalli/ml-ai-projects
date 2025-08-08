@@ -23,12 +23,13 @@ def test_get_conversation_category():
 @pytest.mark.asyncio
 async def test_get_conversation_categories():
 
-    CSV_DATA_DIR = HealthConversationCategorizer.DATA_DIR + '/nlp-mental-health-conversations'
+    # CSV_DATA_DIR = HealthConversationCategorizer.DATA_DIR + '/nlp-mental-health-conversations'
+    CSV_DATA_DIR = "app/test/data"
 
     # download the data
-    dataset_url = 'https://www.kaggle.com/datasets/thedevastator/nlp-mental-health-conversations/data'
-    od.download(dataset_url, data_dir=HealthConversationCategorizer.DATA_DIR)
-    df:pd.DataFrame = pd.read_csv(CSV_DATA_DIR + '/train.csv')
+    # dataset_url = 'https://www.kaggle.com/datasets/thedevastator/nlp-mental-health-conversations/data'
+    # od.download(dataset_url, data_dir=HealthConversationCategorizer.DATA_DIR)
+    df:pd.DataFrame = pd.read_csv(CSV_DATA_DIR + '/test_train.csv')
 
     # clean up the data
     zero_txt_indexes = df[df['Response'] == '0'].index.tolist()
@@ -38,8 +39,8 @@ async def test_get_conversation_categories():
     model_name = "sid321axn/Bio_ClinicalBERT-finetuned-medicalcondition"
     # sentiment_model = "cardiffnlp/twitter-roberta-base-sentiment-latest"
 
-    categorizer = await HealthConversationCategorizer(model_name=model_name)
-    df_senti = categorizer.get_conversation_categories(df_clean)
+    categorizer = HealthConversationCategorizer(model_name=model_name)
+    df_senti = await categorizer.get_conversation_categories(df_clean)
 
 
 

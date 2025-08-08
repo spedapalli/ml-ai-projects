@@ -185,10 +185,12 @@ class HealthConversationCategorizer:
         Returns:
             pd.DataFrame: Original dataframe with new columns "SummarizedText", "Label" aka Sentiment, "Confidence" 
         """
+        print("....... Function initiated .......")
         df_sent = df.apply(self._update_with_sentiment, axis=1)
         # reorder cols given by default DF sorts by column names
         cols_order = ['Context', 'Response', 'SummarizedText', 'Label', 'Confidence']
         df_sent = df_sent[cols_order]
+        print("....... Function completed .......")
 
         return df_sent
 
