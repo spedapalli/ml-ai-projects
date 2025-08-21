@@ -36,14 +36,21 @@ COLLECTION_NAME = "manuals"
 # -- list of operations
 OP_GENERATE_DS = "gen"
 OP_QUERY = "query"
+OP_CLEAN_DB = "cleandb"
 
 def main():
-    op = input("Enter operation (gen, query): ")
+    op = input("Enter operation (gen, query, cleandb): ")
     if (op == OP_GENERATE_DS):
         generate_datastore()
     elif (op == OP_QUERY) :
         query_str = input("Query: ")
         query_datastore(query_str)
+    elif (op == OP_CLEAN_DB) :
+        confirm = input("Are you sure you want to clean out the DB ? (Y for Yes) ")
+        if (confirm == 'Y') :
+            clear_db()
+        else:
+            print("Returning without any action on the DB")
     else :
         print(f"""ERROR: Invalid input.
               Please enter {OP_GENERATE_DS} to upload documents in data/manuals dir OR

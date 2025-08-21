@@ -1,5 +1,6 @@
 # REF : https://pypi.org/project/llama-index/
 # REF : https://github.com/run-llama/llama_index
+## ------ Future work in progress -------
 
 import os
 os.environ["REPLICATE_API_TOKEN"] = <YOUR_REPLICATE_TOKEN>
@@ -33,6 +34,7 @@ Settings.embed_model = HuggingFaceEmbedding(
 
 documents = SimpleDirectoryReader(input_files=[f'{DOCS_DIR}/IM-38MURA-02.pdf']).load_data()
 print(f'document size: {len(documents)}')
+# store the doc as a vector
 index = VectorStoreIndex.from_documents(
     documents,
 )
