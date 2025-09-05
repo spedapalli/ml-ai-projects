@@ -5,16 +5,17 @@ from pydantic import BaseModel, UUID4, ConfigDict, Field
 from pymongo import errors
 
 import core.logger_utils as logger_utils
-from core.db.mongo import connection
+from db.mongo import connection
 from core.errors import ImproperlyConfigured
+from core.config import settings
 
 
-_database = connection.get_database("twin")
+_database = connection.get_database(settings.MONGO_DATABASE_NAME)
 logger = logger_utils.get_logger(__name__)
 
 class BaseDocument(BaseModel) :
 
-    uuid: UUID4 = Field(default_factory=uuid.uuid4)
+    id: UUID4 = Field(default_factory=uuid.uuid4)
 
     model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
@@ -29,7 +30,7 @@ class BaseDocument(BaseModel) :
             _type_: If data is None, returns None. Else the object associated with the given Id in the params
         """
         if not data:
-            return data
+            return None
 
         id = data.pop("_id", None)
         return cls(**dict(data, id = id))
@@ -82,7 +83,9 @@ class BaseDocument(BaseModel) :
         try:
             instance = collection.find_one(filter_options)
             if instance:
-                return str(cls.from_mongo(instance).id)
+                db_doc = cls.from_mongo(instance)
+                if db_doc is not None:
+                    return str(db_doc.id)
 
             new_instance = cls(**filter_options)
             new_instance = new_instance.save()

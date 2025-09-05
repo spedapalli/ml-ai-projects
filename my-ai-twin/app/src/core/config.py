@@ -8,8 +8,13 @@ ROOT_DIR = str(Path(__file__).parent.parent.parent)
 class AppSettings(BaseSettings) :
     model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding='utf-8')
 
+    MONGO_DB_1:str = 'mongodb1:30001'
+    MONGO_DB_2:str = 'mongodb2:30002'
+    MONGO_DB_3:str = 'mongodb3:30003'
+    MONGO_REPLICA_SET:str = 'mdb-replica-set'
+
     MONGO_DATABASE_HOST: str= (
-        "mongodb://mongo1:30001, mongo2:30002:30003/?replicaSet=my-replica-set"
+        f"mongodb://{MONGO_DB_1}, {MONGO_DB_2}, {MONGO_DB_3}/?replicaSet={MONGO_REPLICA_SET}"
     )
     MONGO_DATABASE_NAME:str = "twin"
 
@@ -57,7 +62,7 @@ class AppSettings(BaseSettings) :
     EMBEDDING_MODEL_DEVICE: str = "cpu"
 
     def patch_localhost(self) -> None:
-        self.MONGO_DATABASE_HOST = "mongodb://localhost:30001, localhost:30002, localhost:30003/?replicaSet=my-replica-set"
+        self.MONGO_DATABASE_HOST = settings.MONGO_DATABASE_HOST
         self.QDRANT_DATABASE_HOST = "localhost"
         self.RABBITMQ_HOST = "localhost"
 

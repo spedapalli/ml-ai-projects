@@ -57,6 +57,7 @@ huggingface-hub = "0.34.4"
 sagemaker = ">=2.251.0"
 sentence-transformers = "^5.1.0"
 gradio = "^5.43.1"
+core-db = "2.2.0"
 
 
 [build-system]

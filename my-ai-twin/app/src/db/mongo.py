@@ -16,6 +16,7 @@ class MongoDatabaseConnector:
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             try :
+                logger.info(f"Database host url: {settings.MONGO_DATABASE_HOST}")
                 cls._instance = MongoClient(settings.MONGO_DATABASE_HOST)
                 logger.info(f"Connection to database with uri: {settings.MONGO_DATABASE_HOST} successful")
 
@@ -40,4 +41,4 @@ class MongoDatabaseConnector:
             logger.info("Database connection not initialized and hence nothing to close")
 
 
-connection = MongoDatabaseConnector
+connection = MongoDatabaseConnector()

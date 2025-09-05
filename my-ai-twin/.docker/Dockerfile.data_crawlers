@@ -62,31 +62,41 @@ RUN /usr/sbin/useradd -m appuser
 COPY --from=build /opt/chrome-linux64 /opt/chrome
 COPY --from=build /opt/chromedriver-linux64 /opt/
 
+RUN mkdir /app
+WORKDIR /app
+RUN chown -R appuser:appuser .
+# Switch to non-root user
+USER appuser
+ARG LAMBDA_TASK_ROOT=/app
+
 # copy toml and poetry build files
 COPY ./pyproject.toml ./poetry.lock ./
 
-
 # Copy application code
 # COPY --chown=appuser:appuser . .
-RUN chown -R appuser:appuser /var/task
+# RUN chown -R appuser:appuser /var/task
 
-# Switch to non-root user
-USER appuser
 # Set the PATH to include user packages
 ENV PATH=/home/appuser/.local/bin:$PATH
 
 RUN python -m pip install --upgrade pip && pip install "poetry==$POETRY_VERSION" && pip install poetry-plugin-export
 # RUN poetry export --without feature_pipeline -f requirements.txt > requirements.txt && \
 RUN poetry export -f requirements.txt > requirements.txt && \
-    pip install --no-cache-dir --no-deps -r requirements.txt --target "${LAMBDA_TASK_ROOT}" && \
+    pip install --no-cache-dir --no-deps -r requirements.txt --target "${LAMBDA_TASK_ROOT}/lib" && \
     rm requirements.txt pyproject.toml poetry.lock
 
 # Optional TLS CA only to store extracted data in Document DB
 RUN wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -P ${LAMBDA_TASK_ROOT}
-ENV PYTHONPATH="${LAMBDA_TASK_ROOT}/data_crawling:${LAMBDA_TASK_ROOT}"
 
 # copy data crawling code
-COPY ./app/src/datapipe ${LAMBDA_TASK_ROOT}/datapipe
-COPY ./app/src/core ${LAMBDA_TASK_ROOT}/core
+COPY ./app/src/datapipe ${LAMBDA_TASK_ROOT}/src/datapipe
+COPY ./app/src/core ${LAMBDA_TASK_ROOT}/src/core
+COPY ./app/src/db ${LAMBDA_TASK_ROOT}/src/db
+COPY ./app/src/model ${LAMBDA_TASK_ROOT}/src/model
 
+# set the path to src folder in docker container
+ENV PYTHONPATH="${LAMBDA_TASK_ROOT}/src/:${LAMBDA_TASK_ROOT}/lib"
+# datapipe:${LAMBDA_TASK_ROOT}/src"
+
+# WORKDIR ${LAMBDA_TASK_ROOT}/src/
 CMD ["datapipe.aws_lambda_handler.handler"]
