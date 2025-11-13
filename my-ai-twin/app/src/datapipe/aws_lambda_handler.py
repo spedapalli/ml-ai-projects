@@ -4,7 +4,7 @@ from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from core import string_utils
-from model.db.documents import UserDocument
+from models.db.documents import UserDocument
 from datapipe.crawlers.linkedin_crawler import LinkedInCrawler
 from datapipe.crawlers.medium_crawler import MediumCrawler
 from datapipe.crawler_dispatcher import CrawlerDispatcher
@@ -19,7 +19,7 @@ _dispatcher.register("medium", MediumCrawler)
 # _dispatcher.register("github", GitHubCrawler)
 
 def handler(event, context: LambdaContext | None = None) -> dict[str, Any]:
-    """ Entry point to AWS Lambda fn., when an event, such as new content published to 
+    """ Entry point to AWS Lambda fn., when an event, such as new content published to
      GitHub or LinkedIn or Medoum, triggers
 
     Args:

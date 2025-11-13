@@ -8,7 +8,8 @@ logger = get_logger(__file__)
 
 
 class MongoDatabaseConnector:
-    """_summary_
+    """
+    Singleton class to manage connections to MongoDB
     """
 
     _instance: MongoClient | None = None
@@ -17,7 +18,8 @@ class MongoDatabaseConnector:
         if cls._instance is None:
             try :
                 logger.info(f"Database host url: {settings.MONGO_DATABASE_HOST}")
-                cls._instance = MongoClient(settings.MONGO_DATABASE_HOST)
+                # #TODO: directConnection=False in prod preferrably. Using temporarily, for test
+                cls._instance = MongoClient(settings.MONGO_DATABASE_HOST) #, directConnection=True)
                 logger.info(f"Connection to database with uri: {settings.MONGO_DATABASE_HOST} successful")
 
             except ConnectionFailure:

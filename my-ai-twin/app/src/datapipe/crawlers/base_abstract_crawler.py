@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from model.db.base_document import BaseDocument
+from models.db.base_document import BaseDocument
 
 """
 Base class that captures base functionality used by source specific web scraper(s).

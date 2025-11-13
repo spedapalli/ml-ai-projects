@@ -1,0 +1,10 @@
+https://medium.com/@sambas/different-facets-of-an-engineering-manager-role-7ba0aded6f17
+https://medium.com/@sambas/outcomes-are-driven-by-relationship-not-hierarchy-d528dc795ef7
+https://medium.com/@sambas/framework-to-manage-engineering-teams-on-continuous-basis-7c8d05880d6a
+https://github.com/spedapalli/ml-ai-projects/tree/main/lifesciences/gene-exp-4-tumor
+https://github.com/spedapalli/ml-ai-projects/tree/main/lifesciences/mental-health-counseling
+https://github.com/spedapalli/ml-ai-projects/tree/main/used_car_dealership
+https://github.com/spedapalli/ml-ai-projects/tree/main/bank_direct_marketing
+https://github.com/spedapalli/ml-ai-projects/tree/main/amazon-coupons
+https://github.com/spedapalli/ml-ai-projects/tree/main/RAG/PdfIngester
+https://github.com/spedapalli/ml-ai-projects/tree/my-ai-twin-1/my-ai-twin

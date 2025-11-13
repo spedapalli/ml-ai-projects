@@ -9,7 +9,7 @@ from aws_lambda_powertools import Logger
 
 from core.config import settings
 from datapipe.crawlers.base_abstract_crawler import BaseAbstractCrawler
-from model.db.documents import PostDocument
+from models.db.documents import PostDocument
 from core.errors import ImproperlyConfigured
 from core.logger_utils import get_logger
 

@@ -1,5 +1,5 @@
 # Amazonlinux is RPM based linux based on Fedora and CentOS
-FROM public.ecr.aws/lambda/python:3.13 as build
+FROM public.ecr.aws/lambda/python:3.12 as build
 
 RUN dnf update
 
@@ -10,7 +10,7 @@ RUN dnf install -y unzip && \
     unzip /tmp/chromedriver.zip -d /opt/ && \
     unzip /tmp/chrome-linux.zip -d /opt/
 
-FROM public.ecr.aws/lambda/python:3.13
+FROM public.ecr.aws/lambda/python:3.12
 
 ENV POETRY_VERSION=2.1.3
 
@@ -81,9 +81,10 @@ ENV PATH=/home/appuser/.local/bin:$PATH
 
 RUN python -m pip install --upgrade pip && pip install "poetry==$POETRY_VERSION" && pip install poetry-plugin-export
 # RUN poetry export --without feature_pipeline -f requirements.txt > requirements.txt && \
-RUN poetry export -f requirements.txt > requirements.txt && \
-    pip install --no-cache-dir --no-deps -r requirements.txt --target "${LAMBDA_TASK_ROOT}/lib" && \
-    rm requirements.txt pyproject.toml poetry.lock
+RUN poetry export -f requirements.txt --output requirements.txt && \
+    # pip install --no-cache-dir --no-deps -r requirements.txt --target "${LAMBDA_TASK_ROOT}/lib" && \
+    pip install --no-cache-dir --no-deps -r requirements.txt
+    # rm requirements.txt pyproject.toml poetry.lock
 
 # Optional TLS CA only to store extracted data in Document DB
 RUN wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -P ${LAMBDA_TASK_ROOT}
@@ -92,7 +93,7 @@ RUN wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -P ${
 COPY ./app/src/datapipe ${LAMBDA_TASK_ROOT}/src/datapipe
 COPY ./app/src/core ${LAMBDA_TASK_ROOT}/src/core
 COPY ./app/src/db ${LAMBDA_TASK_ROOT}/src/db
-COPY ./app/src/model ${LAMBDA_TASK_ROOT}/src/model
+COPY ./app/src/models ${LAMBDA_TASK_ROOT}/src/models
 
 # set the path to src folder in docker container
 ENV PYTHONPATH="${LAMBDA_TASK_ROOT}/src/:${LAMBDA_TASK_ROOT}/lib"

@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ref to project root dir
@@ -14,7 +15,7 @@ class AppSettings(BaseSettings) :
     MONGO_REPLICA_SET:str = 'mdb-replica-set'
 
     MONGO_DATABASE_HOST: str= (
-        f"mongodb://{MONGO_DB_1}, {MONGO_DB_2}, {MONGO_DB_3}/?replicaSet={MONGO_REPLICA_SET}"
+        f"mongodb://{MONGO_DB_1},{MONGO_DB_2},{MONGO_DB_3}/?replicaSet={MONGO_REPLICA_SET}"
     )
     MONGO_DATABASE_NAME:str = "twin"
 
@@ -22,7 +23,7 @@ class AppSettings(BaseSettings) :
     RABBITMQ_DEFAULT_USERNAME: str = "guest"
     RABBITMQ_DEFAULT_PASSWORD: str = "guest"
     RABBITMQ_HOST: str = "mq"
-    RABBITMQ_PORT: int = 5673
+    RABBITMQ_PORT: int =5673
 
     #QdrantDB config
     QDRANT_CLOUD_URL:str = "str"
@@ -33,7 +34,7 @@ class AppSettings(BaseSettings) :
 
     # OpenAI config
     OPENAI_MODEL_ID: str = "gpt-4o-mini"
-    OPENAI_API_KEY: str | None = None
+    OPENAI_API_KEY: SecretStr | None = None
 
     # ComentML config
     COMET_API_KEY: str | None = None
@@ -60,6 +61,9 @@ class AppSettings(BaseSettings) :
     EMNEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
     EMBEDDING_SIZE: int = 348
     EMBEDDING_MODEL_DEVICE: str = "cpu"
+
+    # Opik config
+    OPIK_API_KEY: str | None = None
 
     def patch_localhost(self) -> None:
         self.MONGO_DATABASE_HOST = settings.MONGO_DATABASE_HOST

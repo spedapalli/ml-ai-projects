@@ -1,0 +1,54 @@
+# Using python-optimized base image (debian bookworm aka v12 os)
+# NOTE: as of Jul 21, all slim bookworm versions hv critical CVEs. For this POC sticking to 3.11
+FROM python:3.11-slim-bookworm AS builder
+
+ENV WORKSPACE_ROOT=/app/src \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    POETRY_HOME=".venv/bin/poetry" \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VERSION=2.1.3
+
+RUN mkdir -p ${WORKSPACE_ROOT}
+
+# install system dependencies
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends build-essential \
+    gcc \
+    python3-dev \
+#    curl \
+    build-essential \
+    && apt-get clean
+
+
+# install poetry n clear cache
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+RUN poetry config installer.max-workers 20
+
+# RUN apt-get remove -y curl
+
+# Copy the pyproject.toml and poetry.lock files from the root directory
+COPY ./pyproject.toml ./poetry.lock ./
+
+# install dependencies n clear cache
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-root --no-interaction --no-cache && \
+    rm -rf ~/.cache/pypoetry/cache/ && \
+    rm -rf ~/.cache/pypoetry/artifacts/
+
+
+WORKDIR ${WORKSPACE_ROOT}
+
+COPY ./app/src/featurepipe ./featurepipe
+COPY ./app/src/core ./core
+COPY ./app/src/db ./db
+COPY ./app/src/models ./models
+
+ENV PYTHONPATH=${WORKSPACE_ROOT}
+# Set below to 1, to get more details on backtrace of an error
+ENV RUST_BACKTRACE=0
+
+RUN chmod +x ${WORKSPACE_ROOT}/featurepipe/scripts/bytewax_entrypoint.sh
+# Using var
+CMD ["/bin/sh", "-c", "${WORKSPACE_ROOT}/featurepipe/scripts/bytewax_entrypoint.sh"]
+# CMD ["/app/src/scripts/bytewax_entrypoint.sh"]

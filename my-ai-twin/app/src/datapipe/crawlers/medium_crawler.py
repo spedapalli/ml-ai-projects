@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 from aws_lambda_powertools import Logger
 
-from model.db.documents import ArticleDocument
+from models.db.documents import ArticleDocument
 from datapipe.crawlers.base_abstract_crawler import BaseAbstractCrawler
 
 
