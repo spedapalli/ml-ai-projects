@@ -22,8 +22,8 @@ class AppSettings(BaseSettings) :
     # MQ config
     RABBITMQ_DEFAULT_USERNAME: str = "guest"
     RABBITMQ_DEFAULT_PASSWORD: str = "guest"
-    RABBITMQ_HOST: str = "mq"
-    RABBITMQ_PORT: int =5673
+    RABBITMQ_HOST: str = "rabbitmq"
+    RABBITMQ_PORT: int =5672
 
     #QdrantDB config
     QDRANT_CLOUD_URL:str = "str"

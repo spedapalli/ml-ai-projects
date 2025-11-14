@@ -29,7 +29,8 @@ class RabbitMQPartition (StatefulSourcePartition, Generic[DataT, MessageT]):
         self.connection.connect()
         self.channel = self.connection.get_channel()
 
-    def next_batch(self, sched: Optional[datetime]) -> Iterable[DataT] :
+    # def next_batch(self, sched: Optional[datetime]) -> Iterable[DataT] :
+    def next_batch(self) -> Iterable[DataT] :
         try:
             method_frame, header_frame, body_frame = self.channel.basic_get(
                 queue=self.queue_name,

@@ -53,12 +53,17 @@ services:
     restart: always
 
 
-  mq:
-    image: rabbitmq:3-management-alpine
+  rabbitmq:
+    image: rabbitmq:3-management
     container_name: llm-twin-mq
+    hostname: rabbitmq
     ports:
-      - "5673:5672"
-      - "15673:15672"
+      - 5672:5672 #amqp
+      - 15672:15672 #http
+      - 15692:15692 #prometheus
+    # expose:
+    #   - 5673
+    #   - 15673
     networks:
       - mq-network
     volumes:
@@ -66,7 +71,8 @@ services:
       - ./rabbitmq/log/:/var/log/rabbitmq
     restart: always
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "5673"]
+      # test: ["CMD", "nc", "-z", "rabbitmq", "5673"]
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 5s
       timeout: 30s
       retries: 5
@@ -91,7 +97,7 @@ services:
 
 
   # Data Crawlers
-  data-Crawlers:
+  data-crawlers:
     image: "my-ai-twin-data-crawlers"
     container_name: my-ai-twin-data-crawlers
     platform: "linux/arm64"
@@ -114,16 +120,21 @@ services:
     container_name: llm-twin-data-cdc
     networks:
       - mq-network
+      - mongodb-replica-net
     build:
       context: .
       dockerfile: .docker/Dockerfile.data_cdc
     env_file:
       - .env
     depends_on:
-      - mongodb1
-      - mongodb2
-      - mongodb3
-      - mq
+      mongodb1:
+        condition: service_started
+      mongodb2:
+        condition: service_started
+      mongodb3:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
 
 
   feature_pipeline:
@@ -143,8 +154,10 @@ services:
     env_file:
       - .env
     depends_on:
-      - mq
-      - qdrant
+      rabbitmq:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
     restart: always
 
 
