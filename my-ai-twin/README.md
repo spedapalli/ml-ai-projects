@@ -44,7 +44,8 @@ MQ :
 
 #### Running the Application :
 ##### Test Data Crawlers :
-1. `cd` into the directory. Run `docker compose -f docker-compose.yml up --build -d`. If you want to only build data-crawlers module, please see the `docker-compose.yml` file as of this commit.
+1. `cd` into the directory. Run `docker compose -f docker-compose.yml up --build -d`. If you want to only build data-crawlers module, please see the `docker-compose.yml` file as of this commit. *NOTE* : Crawlers is the only module configured to use x86_amd64 architecture given Google provides chrome browser
+for this architecture by default. Installing chromium for arm64 architecture on Amazon Linux 2023 version proved out to be lot more challenging.
 2. Run this cmd to test `curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
 -d '{"user": "Samba Pedapalli", "link": "https://medium.com/@sambas/framework-to-manage-engineering-teams-on-continuous-basis-7c8d05880d6a"}'`
 3. Run the cmd to test Github URL : `curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
