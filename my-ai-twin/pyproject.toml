@@ -59,6 +59,7 @@ sentence-transformers = "^5.1.0"
 gradio = "^5.43.1"
 core-db = "2.2.0"
 bytewax = "^0.21.1"
+webdriver-manager = "^4.0.2"
 
 
 [build-system]

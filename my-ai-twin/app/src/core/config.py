@@ -20,8 +20,8 @@ class AppSettings(BaseSettings) :
     MONGO_DATABASE_NAME:str = "twin"
 
     # MQ config
-    RABBITMQ_DEFAULT_USERNAME: str = "guest"
-    RABBITMQ_DEFAULT_PASSWORD: str = "guest"
+    RABBITMQ_DEFAULT_USERNAME: str | None = None
+    RABBITMQ_DEFAULT_PASSWORD: str | None = None
     RABBITMQ_HOST: str = "rabbitmq"
     RABBITMQ_PORT: int =5672
 

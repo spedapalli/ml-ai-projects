@@ -7,6 +7,7 @@ from core import string_utils
 from models.db.documents import UserDocument
 from datapipe.crawlers.linkedin_crawler import LinkedInCrawler
 from datapipe.crawlers.medium_crawler import MediumCrawler
+from datapipe.crawlers.github_crawler import GithubCrawler
 from datapipe.crawler_dispatcher import CrawlerDispatcher
 
 
@@ -16,7 +17,7 @@ logger = Logger(service="llm-twin-course/crawler")
 _dispatcher = CrawlerDispatcher()
 _dispatcher.register("linkedin", LinkedInCrawler)
 _dispatcher.register("medium", MediumCrawler)
-# _dispatcher.register("github", GitHubCrawler)
+_dispatcher.register("github", GithubCrawler)
 
 def handler(event, context: LambdaContext | None = None) -> dict[str, Any]:
     """ Entry point to AWS Lambda fn., when an event, such as new content published to

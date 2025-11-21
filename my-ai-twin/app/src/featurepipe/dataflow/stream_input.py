@@ -75,6 +75,7 @@ class RabbitMQSource(FixedPartitionedSource):
                    for_part: str,
                    resume_state: MessageT | None = None) -> StatefulSourcePartition[DataT, MessageT]:
 
+        # #TODO : Each instantiation results in new RabbitMQ connection. Shud this be optimized ??
         return RabbitMQPartition(queue_name=fp_settings.RABBITMQ_QUEUE_NAME)
 
 

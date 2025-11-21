@@ -68,7 +68,9 @@ services:
       - mq-network
     volumes:
       - ./rabbitmq/data/:/var/lib/rabbitmq/
-      - ./rabbitmq/log/:/var/log/rabbitmq
+      - ./rabbitmq/conf/definitions.json:/etc/rabbitmq/definitions.json:ro  #read only
+      - ./rabbitmq/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro    #read only
+      # - ./rabbitmq/log/:/var/log/rabbitmq
     restart: always
     healthcheck:
       # test: ["CMD", "nc", "-z", "rabbitmq", "5673"]
@@ -100,7 +102,7 @@ services:
   data-crawlers:
     image: "my-ai-twin-data-crawlers"
     container_name: my-ai-twin-data-crawlers
-    platform: "linux/arm64"
+    platform: "linux/amd64"
     networks:
       - mongodb-replica-net
     build:

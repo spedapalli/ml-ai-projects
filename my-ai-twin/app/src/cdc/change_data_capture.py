@@ -1,6 +1,7 @@
 import json
 
 from bson import json_util
+from pymongo.change_stream import DatabaseChangeStream
 
 from db.mongo import MongoDatabaseConnector
 from core.config import settings
@@ -17,11 +18,14 @@ class ChangeDataCapturer:
         try :
             client = MongoDatabaseConnector()
             db = client[settings.MONGO_DATABASE_NAME]
-            logger.info("Connected to MongoDB")
+            logger.info(f"Connected to MongoDB. Database name: {settings.MONGO_DATABASE_NAME}")
 
             # watch for changes in a specific collection -  all places where 'operationType' has 'insert' value
+            # mongo db query: {"op": { "$in": ["i"] }, "ns": "twin.articles" }
             # changes = db.watch([{"$match": {"operationType": {"$in": ["insert"]}}}])
-            changes = db.watch([{"$match": {"op": {"$in": ['i']}}}])
+            pipeline = [{"$match": {"operationType": "insert"}}]
+            changes: DatabaseChangeStream = db.watch(pipeline, full_document='updateLookup')
+
             for change in changes:
                 data_type = change["ns"]["col"]
                 entry_id = str(change["full_document"]["_id"])  # convert Db Object id to string

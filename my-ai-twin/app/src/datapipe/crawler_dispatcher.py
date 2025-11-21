@@ -15,7 +15,7 @@ class CrawlerDispatcher:
 
 
     def register(self, domain: str, crawler: type[BaseCrawler]) -> None :
-        """ Registers a given domain and its associated Crawler class, a class which can crawl through the content
+        """ Registers a given domain and its associated Crawler class, a class which can crawl through the contentw
         from the pages on the domain website.
         Args:
             domain (str): The website domain eg: linkedin or medium
@@ -26,10 +26,12 @@ class CrawlerDispatcher:
 
     def get_crawler(self, url:str) -> BaseCrawler:
         for pattern, crawler in self._crawlers.items():
+
             if re.match(pattern, url):
+                logger.info(f"Found Crawler for URL : {url}")
                 return crawler()
 
-            else :
-                logger.warning(f"No crawler found for {url}. Defaulting to CustomArticleCrawler.")
+        else :
+            logger.warning(f"No crawler found for {url}. Defaulting to CustomArticleCrawler.")
 
-                return CustomArticleCrawler()
+            return CustomArticleCrawler()

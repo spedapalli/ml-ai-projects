@@ -12,7 +12,8 @@ lifesciences/mental-health-counseling/data/nlp-mental-health-conversations/**
 
 RAG/PdfIngester/dist/**
 RAG/PdfIngester/qdrant_storage/
-my-ai-twin/rabbitmq/
+my-ai-twin/rabbitmq/data/
+# my-ai-twin/rabbitmq/log/
 pipelines/
 
 # Jupyter Notebook
