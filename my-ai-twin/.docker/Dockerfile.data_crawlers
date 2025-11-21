@@ -3,13 +3,6 @@ FROM public.ecr.aws/lambda/python:3.12 AS build
 
 RUN dnf update
 
-# install chrome driver and browser in docker
-# RUN dnf install -y unzip && \
-#     curl -Lo "/tmp/chromedriver.zip" "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.138/linux64/chromedriver-linux64.zip" && \
-#     curl -Lo "/tmp/chrome-linux.zip" "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.138/linux64/chrome-linux64.zip" && \
-#     unzip /tmp/chromedriver.zip -d /opt/ && \
-#     unzip /tmp/chrome-linux.zip -d /opt/
-
 FROM public.ecr.aws/lambda/python:3.12
 
 ENV POETRY_VERSION=2.1.3
@@ -24,8 +17,6 @@ RUN dnf update -y && \
     libcurl-devel \
     postgresql-devel \
     # system and inter-process commn libs
-    # chromium \
-    # chromium-headless \
     atk \
     at-spi2-atk \
     alsa-lib \
@@ -35,7 +26,6 @@ RUN dnf update -y && \
     glibc \
     gtk3 \
     liberation-fonts \
-    # libxext6 \
     libdrm \
     libxkbcommon \
     libX11 \
@@ -52,66 +42,16 @@ RUN dnf update -y && \
     pango \
     unzip \
     vulkan-loader \
-    # vulkan-info \
     xdg-utils
-    # at-spi2-atk \
-    # xorg-x11-server-Xvfb \
-    # xorg-x11-xauth \
-    # mesa-libgbm \
-    # ffmpeg \
-
-# RUN dnf update -y && \
-#     dnf install -y \
-#     wget \
-#     unzip \
-#     tar \
-#     libX11 \
-#     libXcomposite \
-#     libXcursor \
-#     libXdamage \
-#     libXext \
-#     libXi \
-#     libXtst \
-#     cups-libs \
-#     libXScrnSaver \
-#     libXrandr \
-#     alsa-lib \
-#     pango \
-#     atk \
-#     gtk3 \
-#     nss \
-#     mesa-libgbm \
-#     # amazon-linux-extras \
-#     && dnf clean all
 
 
-# Install Google Chrome
-# RUN file /bin/ls
+# install chrome in docker
 RUN dnf install -y glibc && \
     wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
     ls . && \
-    # dnf install -y ./google-chrome-stable_current_x86_64.rpm && \
     rpm -i ./google-chrome-stable_current_x86_64.rpm && \
     ls . && \
     rm google-chrome-stable_current_x86_64.rpm
-
-# -- A specific version ---
-# RUN wget -q "https://storage.googleapis.com/chrome-for-testing-public/139.0.7258.138/linux64/chrome-linux64.zip" && \
-#     unzip chrome-linux64.zip && \
-#     ls -a && \
-#     # mv chromedriver /usr/local/bin/ && \
-#     # mv chrome-linux64 /opt/chrome && \
-#     mv chrome-linux64 /usr/local/bin/ && \
-#     rm chrome-linux64.zip
-
-# --- this doesnt work. Rmv ---
-# RUN dnf install -y epel-release
-# RUN dnf install -y chromium
-# RUN CHROMIUM_VERSION=$(chromium-headless --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-
-# RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_aarch64.rpm && \
-#     dnf install -y ./google-chrome-stable_current_aarch64.rpm && \
-#     rm google-chrome-stable_current_aarch64.rpm
 
 # Install ChromeDriver matching Chrome version
 RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1) && \
@@ -122,25 +62,6 @@ RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
     chmod +x /usr/local/bin/chromedriver && \
     rm -rf chromedriver-linux64.zip chromedriver-linux64
 
-
-# RUN CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
-#     wget -q https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip && \
-#     unzip chromedriver_linux64.zip && \
-#     mv chromedriver /usr/local/bin/ && \
-#     chmod +x /usr/local/bin/chromedriver && \
-#     rm chromedriver_linux64.zip
-
-# RUN CHROMEDRIVER_MAJOR_VERSION=$(echo $CHROMIUM_VERSION | cut -d'.' -f1) && \
-#     wget -q --continue -P /usr/local/bin "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_MAJOR_VERSION/chromedriver_linux64.zip" && \
-#     unzip /usr/local/bin/chromedriver_linux64.zip -d /usr/local/bin && \
-#     rm /usr/local/bin/chromedriver_linux64.zip && \
-#     chmod +x /usr/local/bin/chromedriver
-
-# RUN google-chrome --version && \
-#     chromedriver --version
-
-# install dev Tools group
-# RUN dnf group install -y "Development Tools"
 RUN dnf update -y && \
     dnf install -y gcc gcc-c++ make automake autoconf libtool pkgconfig
 
@@ -149,10 +70,6 @@ RUN dnf update -y && \
 # Create non-root user for security
 # RUN adduser --disabled-password appuser
 # RUN /usr/sbin/useradd -m appuser
-
-# copy chrome drivers
-# COPY --from=build /opt/chrome-linux64 /opt/chrome
-# COPY --from=build /opt/chromedriver-linux64 /opt/
 
 
 RUN mkdir /app
@@ -169,16 +86,10 @@ COPY ./pyproject.toml ./poetry.lock ./
 # COPY --chown=appuser:appuser . .
 # RUN chown -R appuser:appuser /var/task
 
-# Set the PATH to include user packages
-# ENV PATH=/home/appuser/.local/bin:/opt/:$PATH
-# ENV PATH=/opt/:/opt/chrome:$PATH
 
 RUN python -m pip install --upgrade pip && pip install "poetry==$POETRY_VERSION" && pip install poetry-plugin-export
-# RUN poetry export --without feature_pipeline -f requirements.txt > requirements.txt && \
 RUN poetry export -f requirements.txt --output requirements.txt && \
-    # pip install --no-cache-dir --no-deps -r requirements.txt --target "${LAMBDA_TASK_ROOT}/lib" && \
     pip install --no-cache-dir --no-deps -r requirements.txt
-    # rm requirements.txt pyproject.toml poetry.lock
 
 # Optional TLS CA only to store extracted data in Document DB
 RUN wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -P ${LAMBDA_TASK_ROOT}
@@ -191,7 +102,7 @@ COPY ./app/src/models ${LAMBDA_TASK_ROOT}/src/models
 
 # set the path to src folder in docker container
 ENV PYTHONPATH="${LAMBDA_TASK_ROOT}/src/:${LAMBDA_TASK_ROOT}/lib"
-# datapipe:${LAMBDA_TASK_ROOT}/src"
+
 
 # WORKDIR ${LAMBDA_TASK_ROOT}/src/
 CMD ["datapipe.aws_lambda_handler.handler"]
