@@ -15,7 +15,7 @@ class CrawlerDispatcher:
 
 
     def register(self, domain: str, crawler: type[BaseCrawler]) -> None :
-        """ Registers a given domain and its associated Crawler class, a class which can crawl through the contentw
+        """ Registers a given domain and its associated Crawler class, a class which can crawl through the content
         from the pages on the domain website.
         Args:
             domain (str): The website domain eg: linkedin or medium

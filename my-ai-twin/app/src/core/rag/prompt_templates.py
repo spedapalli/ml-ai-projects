@@ -14,6 +14,7 @@ class BasePromptTemplate(ABC, BaseModel):
 
 
 class QueryExpansionTemplate(BasePromptTemplate):
+    # #TODO : Explore if we can work directly with message objects (HumanMessage, AIMessage, ToolMessage) instead of templates ??
     prompt: str = """You are an AI language model assistant. Your task is to generate {to_expand_to_n}
         different versions of the given user question to retrieve relevant documents from a vector
         database. By generating multiple perspectives on the user question, your goal is to help

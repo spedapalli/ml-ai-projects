@@ -51,10 +51,15 @@ for this architecture by default. Installing chromium for arm64 architecture on 
 3. Run the cmd to test Github URL : `curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
 	  	-d '{"user": "Samba Pedapalli", "link": "https://github.com/spedapalli/ml-ai-projects/tree/my-ai-twin-1/my-ai-twin"}'`
 
-##### Test Feature pipeline :
+##### Unit Test Feature pipeline :
 1. `cd` into the directory. Switch to the local python environment by running `source .venv/bin/activate`.
 2. In your docker console, make sure all the 3 mongodb instances are running and active.
 2. Run `poetry run python -m retriever`
 3. To debug, in VS Code open `my-ai-twin/app/src/featurepipe/retriever.py`. Go to Run / Debug and click on "Python Debugger : Debug Python file"
+
+##### Test CDC :
+1. Build the docker containers using the same command as above in [Test Data Crawlers](#test-data-crawlers-)
+2. Execute the CURL command in above [Test Data Crawlers](#test-data-crawlers-)
+
 
 ##### Contact and Further Information

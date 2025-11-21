@@ -27,12 +27,13 @@ class ChangeDataCapturer:
             changes: DatabaseChangeStream = db.watch(pipeline, full_document='updateLookup')
 
             for change in changes:
-                data_type = change["ns"]["col"]
-                entry_id = str(change["full_document"]["_id"])  # convert Db Object id to string
+                logger.info(f"Change content: {change}")
+                data_type = change["ns"]["coll"]
+                entry_id = str(change["fullDocument"]["_id"])  # convert Db Object id to string
 
-                change["full_document"].pop("_id")
-                change["full_document"]["type"] = data_type
-                change["full_document"]["entry_id"] = entry_id
+                change["fullDocument"].pop("_id")
+                change["fullDocument"]["type"] = data_type
+                change["fullDocument"]["entry_id"] = entry_id
 
                 # for now only below 3. ignore users and other collections
                 if data_type not in ["articles", "posts", "repositories"]:
@@ -40,7 +41,7 @@ class ChangeDataCapturer:
                     continue
 
                 # serialize non-json serializable objs (eg: binary) using json_util
-                data = json.dumps(change["full_document"], default=json_util.default)
+                data = json.dumps(change["fullDocument"], default=json_util.default)
                 logger.debug(f"Change detected and serialized for a data sample of type {data_type}")
 
                 # publish to RabbitMQ
