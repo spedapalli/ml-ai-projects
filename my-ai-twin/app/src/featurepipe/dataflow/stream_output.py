@@ -92,7 +92,7 @@ class QdrantCleanedDataSink(StatelessSinkPartition):
         collection_name = get_clean_collection(data_type=data[0]['type'])
         self._client.write_data(collection_name=collection_name, points=Batch(ids=ids, vectors={}, payloads=data))
 
-        logger.info(f"Successfully inserted cleaned data ", collection_name, num=len(ids))
+        logger.info(f"Successfully inserted cleaned data {collection_name},  num={len(ids)}")
 
 
 
@@ -106,10 +106,11 @@ class QdrantVectorDataSink(StatelessSinkPartition):
         ids, vectors, metadata = zip(*payloads)
         # get collection name from metadata
         collection_name = get_vector_collection(data_type=metadata[0]['type'])
+        # logger.debug(f"Data being inserted into Qdrant has # of Ids= {ids}, Vector size= {vectors}, Metadata: {metadata}")
 
         self._client.write_data(collection_name=collection_name, points=Batch(ids=ids, vectors=vectors, payloads=metadata))
 
-        logger.info("Successfully inserted vector data ", collection_name, num=len(ids))
+        logger.info(f"Successfully inserted vector data : {collection_name}, num={len(ids)}")
 
 
 def get_clean_collection(data_type:int) -> str:

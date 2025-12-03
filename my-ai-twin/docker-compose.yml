@@ -112,6 +112,9 @@ services:
       - .env
     ports:
       - "9010:8080"
+      - "5678:5678" #for debugging AWS Lambda Runtime int emulator(RIE) using debugpy
+    # entrypoint: ["/usr/local/bin/aws-lambda-rie"]
+    # command: ["/var/lang/bin/python", "-Xfrozen_modules=off", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "awslambdaric", "datapipe.aws_lambda_handler.handler"] # for debug only. Comment out for prod deployment
     depends_on:
       - mongodb1
       - mongodb2

@@ -10,7 +10,7 @@ from models.base_models import DataModel
 class PostRawModel(DataModel):
     platform: str
     content: dict
-    author_id: str | None = None
+    author_id: Optional[str] = None
     image: Optional[str] = None
 
 

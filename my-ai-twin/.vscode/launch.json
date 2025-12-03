@@ -1,18 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
         {
-            "version": "0.2.0",
-            "configurations": [
+            "name": "Python: Remote Attach to AWS Lambda",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "port": 5678,
+                "host": "localhost",
+            },
+            "pathMappings": [
                 {
-                    "name": "Python: Remote Attach",
-                    "type": "python",
-                    "request": "attach",
-                    "port": 5678, // The port debugpy is listening on
-                    "host": "localhost", // Or the remote IP address
-                    "pathMappings": [
-                        {
-                            "localRoot": "${workspaceFolder}",
-                            "remoteRoot": "{cwd}/../"
-                        }
-                    ]
+                    "localRoot": "${workspaceFolder}/app",
+                    "remoteRoot": "/app",
                 }
             ]
         }
+    ]
+}

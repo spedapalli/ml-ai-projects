@@ -59,7 +59,7 @@ class AppSettings(BaseSettings) :
     # Embeddings config
     EMBEDDING_MODEL_ID: str = "BAAI/bge-small-en-v1.5"
     EMNEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
-    EMBEDDING_SIZE: int = 348
+    EMBEDDING_SIZE: int = 384 # default size output by the abv model BAAI/bge-small-en-v1.5
     EMBEDDING_MODEL_DEVICE: str = "cpu"
 
     # Opik config

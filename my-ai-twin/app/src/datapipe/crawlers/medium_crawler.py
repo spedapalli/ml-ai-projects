@@ -15,7 +15,7 @@ class MediumCrawler(BaseAbstractCrawler) :
     model = ArticleDocument
 
     def set_extra_driver_options(self, options) -> None:
-        options.add_argument(r"--profile-directory=profile 2")
+        options.add_argument(r"--profile-directory=Profile 2")
 
 
     def extract(self, link:str, **kwargs) -> None:

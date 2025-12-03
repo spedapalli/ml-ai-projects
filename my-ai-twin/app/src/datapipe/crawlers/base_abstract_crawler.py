@@ -23,6 +23,11 @@ class BaseAbstractCrawler(BaseCrawler, ABC) :
     def __init__(self, scroll_limit: int = 5) -> None:
         options: Options = webdriver.ChromeOptions()
 
+        # if below not included medium.com throws error
+        # options.add_argument("--enable-javascript")
+        # options.add_argument("--enable-cookies")
+        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        # std set of options
         options.add_argument("--no-sandbox")    # disable the chrome sandbox security
         options.add_argument("--headless=new")
         options.add_argument("--disable-dev-shm-usage") # in containers, use alt shared memory over default dev/shm

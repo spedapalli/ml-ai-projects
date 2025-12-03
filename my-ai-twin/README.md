@@ -33,13 +33,13 @@ Database :
 - MongoDB is used given the data from crawler is a document, not relational data.
 -- Ports : 3000x (non-standard) used
 -- Redundency is implemented using 3 replicas to make sure if 1 primary goes down, there is always a secondary in place.
-- QDrant used for :
+- QDrant (http://localhost:6333/dashboard#) used for :
 -- As a "clean data sink" for documents, before storing in vector db
 -- Storing the vector representation of the above documents.
 -- Ports : 6333 (Http), 6334 (gRPC). 6335 is also exposed but here we do not have a distributed deployment of qdrant and hence not used.
 
 MQ :
-- RabbitMQ :
+- RabbitMQ (http://localhost:15672/) :
 -- Port : 5673 for communications and 15673 for management console access
 
 #### Running the Application :
@@ -50,16 +50,38 @@ for this architecture by default. Installing chromium for arm64 architecture on 
 -d '{"user": "Samba Pedapalli", "link": "https://medium.com/@sambas/framework-to-manage-engineering-teams-on-continuous-basis-7c8d05880d6a"}'`
 3. Run the cmd to test Github URL : `curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
 	  	-d '{"user": "Samba Pedapalli", "link": "https://github.com/spedapalli/ml-ai-projects/tree/my-ai-twin-1/my-ai-twin"}'`
+4. **Debugging** : To debug, update the code with below :
+	a. Refer to launch.json and its config with debugpy
+	b. Make sure you install debugpy in your environment
+	c. In app/src/datapipe/aws_lambda_handler.py, uncomment below lines :
+	```
+	import debugpy
+	print("Waiting for debugger attach.....")
+	debugpy.wait_for_client()
+	print("Debugger attached!")
+	```
+	d. In .docker/Dockerfile.data_crawlers, uncomment out below lines :
+	```
+	ENV AWS_LAMBDA_SIMULATOR_LOC=/usr/local/bin
+	RUN mkdir -p ${AWS_LAMBDA_SIMULATOR_LOC} && curl -Lo ${AWS_LAMBDA_SIMULATOR_LOC}/aws-lambda-rie \
+	https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie \
+	&& chmod +x ${AWS_LAMBDA_SIMULATOR_LOC}/aws-lambda-rie
+```
+	e. In docker-compose.yml, under `data-crawlers:` config, uncomment out below lines :
+	```
+	entrypoint: ["/usr/local/bin/aws-lambda-rie"]
+    command: ["/var/lang/bin/python", "-Xfrozen_modules=off", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "awslambdaric", "datapipe.aws_lambda_handler.handler"] # for debug only. Comment out for prod deployment
+	```
+
+##### Test CDC :
+1. Build the docker containers using the same command as above in [Test Data Crawlers](#test-data-crawlers-)
+2. Execute the CURL command in above [Test Data Crawlers](#test-data-crawlers-)
 
 ##### Unit Test Feature pipeline :
 1. `cd` into the directory. Switch to the local python environment by running `source .venv/bin/activate`.
 2. In your docker console, make sure all the 3 mongodb instances are running and active.
 2. Run `poetry run python -m retriever`
 3. To debug, in VS Code open `my-ai-twin/app/src/featurepipe/retriever.py`. Go to Run / Debug and click on "Python Debugger : Debug Python file"
-
-##### Test CDC :
-1. Build the docker containers using the same command as above in [Test Data Crawlers](#test-data-crawlers-)
-2. Execute the CURL command in above [Test Data Crawlers](#test-data-crawlers-)
 
 
 ##### Contact and Further Information

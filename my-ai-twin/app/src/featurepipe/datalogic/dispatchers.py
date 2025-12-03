@@ -14,6 +14,7 @@ class RawDispatcher:
     @staticmethod
     def handle_mq_message(message: dict) -> DataModel:
         data_type = message.get("type")
+        logger.info(f"Received MQ message of data type: {data_type}")
 
         if data_type == ContentDataEnum.POSTS:
             return PostRawModel(**message)

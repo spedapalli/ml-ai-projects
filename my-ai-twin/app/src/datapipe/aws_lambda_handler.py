@@ -14,6 +14,13 @@ from datapipe.crawler_dispatcher import CrawlerDispatcher
 
 logger = Logger(service="llm-twin-course/crawler")
 
+### ------- for Debug purposes only --------
+# import debugpy
+# print("Waiting for debugger attach.....")
+# debugpy.wait_for_client()
+# print("Debugger attached!")
+### ------- End Debug code -----------------
+
 _dispatcher = CrawlerDispatcher()
 _dispatcher.register("linkedin", LinkedInCrawler)
 _dispatcher.register("medium", MediumCrawler)
@@ -21,7 +28,7 @@ _dispatcher.register("github", GithubCrawler)
 
 def handler(event, context: LambdaContext | None = None) -> dict[str, Any]:
     """ Entry point to AWS Lambda fn., when an event, such as new content published to
-     GitHub or LinkedIn or Medoum, triggers
+     GitHub or LinkedIn or Medium, triggers
 
     Args:
         event (_type_): Contains "user", "link" to the article,

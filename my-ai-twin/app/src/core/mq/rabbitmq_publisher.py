@@ -15,10 +15,11 @@ class RabbitMQPublisher:
 
             with rabbitmq_conn:
                 channel: BlockingChannel = rabbitmq_conn.get_channel()
+                # Ensure the queue exists
                 channel.queue_declare(queue=queue_name, durable=True)
 
                 channel.confirm_delivery()
-
+                logger.debug(f"Publishing message to RabbitMQ queue: {queue_name}")
                 channel.basic_publish(exchange="",
                                       routing_key=queue_name,
                                       body=data,

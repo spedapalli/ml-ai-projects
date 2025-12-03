@@ -5,7 +5,10 @@ from models.base_models import DataModel
 from models.db_clean_models import PostDBCleanedModel, ArticleDBCleanedModel, RepositoryDBCleanedModel
 from models.raw_models import PostRawModel, ArticleRawModel, RepositoryRawModel
 from featurepipe.utils.text_cleaning_util import normalize_text
+from core.logger_utils import get_logger
 
+
+logger = get_logger(__file__)
 
 class CleaningDataHander(ABC):
 
@@ -32,7 +35,14 @@ class PostCleaningHander(CleaningDataHander) :
 class ArticleCleaningHandler(CleaningDataHander):
 
     def clean(self, data_model: ArticleRawModel) -> ArticleDBCleanedModel:
-        joined_text = "".join(data_model.content.values()) if data_model.content else None
+        logger.debug(f"Article Raw Data model: {data_model}")
+
+        # if data_model.content is not None :
+        joined_text = "".join(
+            (value for value in data_model.content.values()
+                if value is not None) if data_model.content else "")
+
+        # joined_text = "".join(data_model.content.values()) if data_model.content else None
 
         model = ArticleDBCleanedModel(
             entry_id = data_model.entry_id,
@@ -51,7 +61,6 @@ class RepositoryCleaningHandler(CleaningDataHander):
     def clean(self, data_model: RepositoryRawModel) -> RepositoryDBCleanedModel:
         joined_text = "".join(data_model.content.values()) if data_model and data_model.content else None
 
-
         model = RepositoryDBCleanedModel(
             entry_id = data_model.entry_id,
             name = data_model.name,
@@ -64,6 +73,7 @@ class RepositoryCleaningHandler(CleaningDataHander):
 
 
 class CleaningHandlerFactory:
+
     @staticmethod
     def create_handler(data_type) -> CleaningDataHander:
         if data_type == ContentDataEnum.POSTS:
