@@ -6,22 +6,26 @@ from pathlib import Path
 #
 from dotenv import load_dotenv
 
-ROOT_DIR = str(Path(__file__).parent.parent)
-sys.path.append(ROOT_DIR)
+# ROOT_DIR = str(Path(__file__).parents[2] / "src")
+# sys.path.append(ROOT_DIR)
 load_dotenv()   # load the env vars for test
 
 from core import logger_utils
 from core.config import settings
+# IMPORTANT : Initialize to use mongodb on localhost before any module using MongoDB is imported
+# TODO : TO run this in CICD pipeline will need to figure out where mongodb wud run and how to access it
+settings.patch_localhost()
+
 from core.rag.vector_retriever import VectorRetriever
 
 logger = logger_utils.get_logger(__name__)
 
-# use below only if the whole app is run locally using localhost. Not needed for docker runs
-# settings.patch_localhost()
 
-if __name__ == "__main__":
+def test_retriever():
+
     query = """
-        Hello I am Samba Pedapalli. Could you draft an article paragraph discussing RAG ? I am particularly interested in how to design a RAG system.
+        Hello I am Samba Pedapalli.
+        Could you draft an article paragraph discussing RAG ? I am particularly interested in how to design a RAG system.
         """
 
     retriever = VectorRetriever(query=query)

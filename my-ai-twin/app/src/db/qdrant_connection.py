@@ -74,10 +74,12 @@ class QdrantDatabaseConnector:
                query_vector:list,
                query_filter:models.Filter | None=None,
                limit:int = 3) -> list :
-        return self._instance.search(collection_name=collection_name,
-                                     query_vector=query_vector,
-                                     query_filter=query_filter,
-                                     limit=limit)
+
+        response = self._instance.query_points(collection_name=collection_name,
+                                               query=query_vector,
+                                               query_filter=query_filter,
+                                               limit=limit)
+        return response.points
 
     def scroll(self, collection_name:str, limit:int):
         return self._instance.scroll(collection_name=collection_name, limit=limit)

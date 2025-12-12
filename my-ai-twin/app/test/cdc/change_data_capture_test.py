@@ -1,9 +1,15 @@
 import pytest
 
+# IMPORTANT : Initialize to use mongodb on localhost before any module is imported. Else it defaults to docker instance
+# TODO : TO run this in CICD pipeline will need to figure out where mongodb wud run and how to access it
+from core.config import settings
+settings.patch_localhost()
+
 from cdc import change_data_capture
+
 from pymongo import MongoClient
 
-def test_insert_data_to_mongodb(uri="mongodb://mongodb:30001, mongodb:30002, mongodb3:30003/?replicaSet=my-replica-set",
+def test_insert_data_to_mongodb(uri="mongodb://localhost:30001/?directConnection=true",
                                 db_name:str='twin',
                                 collection_name:str = 'posts',
                                 data: dict = {"platform": "LinkedIn", "content": "Test content"}):

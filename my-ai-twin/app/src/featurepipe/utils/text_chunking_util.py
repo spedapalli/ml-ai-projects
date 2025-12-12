@@ -1,6 +1,6 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
 
-from featurepipe.featurepipe_config import fp_settings
+from core.config import settings
 
 
 def chunk_text(text:str) -> list[str]:
@@ -19,8 +19,8 @@ def chunk_text(text:str) -> list[str]:
     # use the default model "sentence-transformers/all-mpnet-base-v2"
     token_splitter = SentenceTransformersTokenTextSplitter(
         chunk_overlap=50,
-        tokens_per_chunk= fp_settings.EMBEDDING_MODEL_MAX_INPUT_LENGTH,
-        model_name= fp_settings.EMBEDDING_MODEL_ID
+        tokens_per_chunk= settings.EMNEDDING_MODEL_MAX_INPUT_LENGTH,
+        model_name= settings.EMBEDDING_MODEL_ID
     )
 
     chunks = []

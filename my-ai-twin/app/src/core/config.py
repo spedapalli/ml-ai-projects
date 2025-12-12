@@ -58,15 +58,20 @@ class AppSettings(BaseSettings) :
 
     # Embeddings config
     EMBEDDING_MODEL_ID: str = "BAAI/bge-small-en-v1.5"
+    EMBEDDING_MODEL_MINI_ID: str = "sentence-transformers/all-MiniLM-L6-v2"
+    EMBEDDING_MODEL_FOR_CODE_ID: str = "hkunlp/instructor-xl"
     EMNEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
     EMBEDDING_SIZE: int = 384 # default size output by the abv model BAAI/bge-small-en-v1.5
     EMBEDDING_MODEL_DEVICE: str = "cpu"
+
+    CROSS_ENCODER_MODEL_ID: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    CROSS_ENCODER_MODEL_DEVICE: str = "cpu" # or cuda
 
     # Opik config
     OPIK_API_KEY: str | None = None
 
     def patch_localhost(self) -> None:
-        self.MONGO_DATABASE_HOST = settings.MONGO_DATABASE_HOST
+        self.MONGO_DATABASE_HOST = "mongodb://localhost:30001/?directConnection=true"
         self.QDRANT_DATABASE_HOST = "localhost"
         self.RABBITMQ_HOST = "localhost"
 

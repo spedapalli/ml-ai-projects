@@ -46,6 +46,10 @@ class ArticleEmbeddingHandler(EmbeddingDataHandler):
 class RepositoryEmbeddingHandler(EmbeddingDataHandler) :
 
     def embed(self, data_model: RepositoryChunkModel) -> RepositoryVectorDBModel :
+        """
+        Embeds the repository chunk content using the model in #featurepipe.utils.embeddings_util.py.
+        """
+
         return RepositoryVectorDBModel(
             entry_id= data_model.entry_id,
             type= data_model.type,
@@ -53,7 +57,8 @@ class RepositoryEmbeddingHandler(EmbeddingDataHandler) :
             link= data_model.link,
             chunk_id= data_model.chunk_id,
             chunk_content= data_model.chunk_content,
-            embedded_content= convert_text_to_embedding(data_model.chunk_content),
+            # embedded_content= convert_text_to_embedding(data_model.chunk_content),
+            embedded_content= convert_repotext_to_embedding(data_model.chunk_content),
             owner_id= data_model.owner_id,
         )
 

@@ -1,4 +1,10 @@
 import pytest
+
+# IMPORTANT : Initialize to use mongodb on localhost before any module is imported. Else it defaults to docker instance
+# TODO : TO run this in CICD pipeline will need to figure out where mongodb wud run and how to access it
+from core.config import settings
+settings.patch_localhost()
+
 from featurepipe.utils import text_chunking_util
 
 def test_chunk_data():

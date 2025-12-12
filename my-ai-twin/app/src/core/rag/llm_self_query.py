@@ -11,7 +11,7 @@ from core.rag.prompt_templates import SelfQueryTemplate
 logger = get_logger(__name__)
 
 
-class SelfQuery:
+class LlmSelfQuery:
 
     opik_tracker = OpikTracer(tags=["SelfQuery"])
 
@@ -31,8 +31,9 @@ class SelfQuery:
         # chain = chain.with_config({"callbacks": [SelfQuery.opik_tracker]})
 
         # response = chain.invoke({"question": query})
-        prompt_response = prompt.invoke({"question": query}, {"callbacks": [SelfQuery.opik_tracker]})
-        response = model.invoke(prompt_response, {"callbacks": [SelfQuery.opik_tracker]})
+        # The assumption is user inputs their name or id. If not, None is returned.
+        prompt_response = prompt.invoke({"question": query}, {"callbacks": [LlmSelfQuery.opik_tracker]})
+        response = model.invoke(prompt_response, {"callbacks": [LlmSelfQuery.opik_tracker]})
         response = response.content
         user_full_name = response.strip("\n")
 

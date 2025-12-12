@@ -82,6 +82,9 @@ def _replace_urls_with_placeholder_(text, placeholder="[URL]"):
 
 
 def normalize_text(text_content: str | None) -> str:
+    """
+    Normalize the text content by removing bold, italic, emojis, symbols, non-ascii chars, urls
+    """
     if text_content is None:
         return ""
 

@@ -11,11 +11,12 @@ class FeaturePipeSettings (BaseSettings) :
     COMET_WORKSPACE: str | None = None
     COMET_PROJECT: str = "llm-twin"
 
-    # Embeddings config
-    EMBEDDING_MODEL_ID: str = "BAAI/bge-small-en-v1.5"
-    EMBEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
-    EMBEDDING_SIZE: int = 384
-    EMBEDDING_MODEL_DEVICE: str = "cpu"
+    # Embeddings config - Use from core.config.py since model is requires when data is written to vector DB
+    # EMBEDDING_MODEL_ID: str = "BAAI/bge-small-en-v1.5"
+    # EMBEDDING_MODEL_MINI_ID: str = "sentence-transformers/all-MiniLM-L6-v2"
+    # EMBEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
+    # EMBEDDING_SIZE: int = 384
+    # EMBEDDING_MODEL_DEVICE: str = "cpu"
 
     # Open AI
     OPENAI_MODEL_ID: str = "gpt-4o-mini"

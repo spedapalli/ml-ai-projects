@@ -10,7 +10,7 @@ from core import string_utils
 from db.qdrant_connection import QdrantDatabaseConnector
 from core.rag.query_expansion import QueryExpansion
 from core.rag.reranker import ReRanker
-from core.rag.self_query import SelfQuery
+from core.rag.llm_self_query import LlmSelfQuery
 
 
 logger = get_logger(__name__)
@@ -24,12 +24,22 @@ class VectorRetriever:
         self.query = query
         self._embedder = SentenceTransformer(settings.EMBEDDING_MODEL_ID)
         self._query_expander = QueryExpansion()
-        self._metadata_extractor = SelfQuery()
+        self._metadata_extractor = LlmSelfQuery()
         self._reranker = ReRanker()
 
 
     def _search_single_query(self, generated_query: str, author_id: str, k: int):
-        assert k > 3, "k should be greater than 3"
+        """
+        Runs query against Qdrant Db against all the collections (articles, posts, repositories)
+        that match the given author_id and retrieves top "k" (param) results.
+
+        Args:
+            generated_query (str): The query to run against the vector store
+            author_id (str): The author_id to filter the results by
+            k (int): The number of results to retrieve. Should be greater than 3
+        """
+
+        assert k > 3, "k should be greater than 3"  # Number of results expected per query
 
         query_vector = self._embedder.encode(generated_query).tolist()
         vectors = [
@@ -38,7 +48,7 @@ class VectorRetriever:
                 query_filter = models.Filter(
                     must=[
                         models.FieldCondition(
-                            key=author_id,
+                            key="author_id",
                             match=models.MatchValue(value=author_id),
                         )
                     ]
@@ -53,7 +63,7 @@ class VectorRetriever:
                 query_filter = models.Filter(
                     must=[
                         models.FieldCondition(
-                            key=author_id,
+                            key="author_id",
                             match=models.MatchValue(value=author_id),
                         )
                     ]
@@ -68,7 +78,7 @@ class VectorRetriever:
                 query_filter= models.Filter(
                     must=[
                         models.FieldCondition(
-                            key= "owner_id",
+                            key="owner_id", # for repos its the owner_id. Refer to RepositoryDBCleanedModel in models.db.base_models.py
                             match= models.MatchValue(value=author_id),
                         )
                     ]
@@ -82,8 +92,25 @@ class VectorRetriever:
         return string_utils.flatten_nested_list(vectors)
 
 
+    # #TODO : Why use Query at the instance level instead of passing it as a param?
     @opik.track(name="retriever.retrieve_top_k")
     def retrieve_top_k(self, k: int, to_expand_to_n_queries:int) -> list:
+        """
+        Retrieves top k documents from the vector store using query expansion and multitenancy search. Below are the steps
+        followed to execute the query :
+        1. Multiple version of query : For Query expansion, it uses LLM to generate multiple (as many as to_expand_to_n_queries)
+        version of queries for the given query.
+        2. Metadata extraction : Retrieves the author_id from the query using LLM.
+        3. Executes each query in above (1) response, in parallel, against the vector store.
+
+        Args:
+            k (int): The number of documents to retrieve.
+            to_expand_to_n_queries (int): The number of queries to expand to using LLM.
+
+        Returns:
+            list: A list of documents retrieved from the vector store.
+        """
+
         generated_queries = self._query_expander.generate_response(
             self.query, to_expand_to_n=to_expand_to_n_queries
         )
@@ -116,7 +143,8 @@ class VectorRetriever:
     @opik.track(name="retriever.rerank")
     def rerank(self, hits: list, keep_top_k: int) -> list[str]:
         content_list = [hit.payload["content"] for hit in hits]
-        rerank_hits = self._reranker.generate_response(
+        # NOTE : Here reranking is done using LLM. Alt option is to use the fn generate_response_using_crossencoder
+        rerank_hits = self._reranker.generate_response_using_llm(
             query=self.query, passages=content_list, keep_top_k=keep_top_k
         )
 

@@ -50,7 +50,7 @@ for this architecture by default. Installing chromium for arm64 architecture on 
 -d '{"user": "Samba Pedapalli", "link": "https://medium.com/@sambas/framework-to-manage-engineering-teams-on-continuous-basis-7c8d05880d6a"}'`
 3. Run the cmd to test Github URL : `curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
 	  	-d '{"user": "Samba Pedapalli", "link": "https://github.com/spedapalli/ml-ai-projects/tree/my-ai-twin-1/my-ai-twin"}'`
-4. **Debugging** : To debug, update the code with below :
+4. **Debugging** : To debug the crawler code, given it uses AWS Lambda (RIE), it involves few steps as detailed below :
 	a. Refer to launch.json and its config with debugpy
 	b. Make sure you install debugpy in your environment
 	c. In app/src/datapipe/aws_lambda_handler.py, uncomment below lines :
