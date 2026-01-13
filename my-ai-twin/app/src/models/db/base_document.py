@@ -37,8 +37,9 @@ class BaseDocument(BaseModel) :
 
 
     def to_mongo(self, **kwargs) -> dict:
-        """Converts input document to MongoDB format. Input param must contain either 'id' (msg id) or '_id' (DB id).
-            Function does not throw an error, currently but queries can fail.
+        """Converts input document to MongoDB format. Input param (kwargs) must contain either 'id'
+        (msg id) or '_id' (DB id). Currently this function does not throw an error but queries can
+        silently fail.
         Returns:
             dict: of properties including the message content and either 'id' or '_id' property.
         """

@@ -16,13 +16,13 @@ RUN apt-get update -y \
     && apt-get install -y --no-install-recommends build-essential \
     gcc \
     python3-dev \
-#    curl \
+    #    curl \
     build-essential \
     && apt-get clean
 
 
 # install poetry n clear cache
-RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+RUN --mount=type=cache,target=/root/.cache/pip pip install --no-cache-dir "poetry==$POETRY_VERSION"
 RUN poetry config installer.max-workers 20
 
 # RUN apt-get remove -y curl
@@ -39,6 +39,7 @@ RUN poetry config virtualenvs.create false && \
 
 WORKDIR ${WORKSPACE_ROOT}
 
+# ------ Stage 2 : Copy code -------
 COPY ./app/src/featurepipe ./featurepipe
 COPY ./app/src/core ./core
 COPY ./app/src/db ./db

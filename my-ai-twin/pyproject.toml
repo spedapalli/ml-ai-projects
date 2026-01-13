@@ -8,18 +8,18 @@ readme = "README.md"
 # ]
 # packages
 packages = [
-    {include='core', from="app/src"},
-    {include='datapipe', from="app/src"},
-    {include='db', from="app/src"},
-    {include='model', from="app/src"},
+    { include = 'cdc', from = "app/src" },
+    { include = 'core', from = "app/src" },
+    { include = 'datapipe', from = "app/src" },
+    { include = 'db', from = "app/src" },
+    { include = 'featurepipe', from = "app/src" },
+    { include = 'models', from = "app/src" },
 ]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 # note : below is a must for tests to be executed using pytest
-pythonpath = [
-    "app/src"
-]
+pythonpath = ["app/src"]
 
 # dependency mgmt only. Disable package mode
 package-mode = false
@@ -35,6 +35,7 @@ pika = "^1.3.2"
 qdrant-client = "^1.8.0"
 aws-lambda-powertools = "^3.19.0"
 selenium = "4.35.0"
+undetected-chromedriver = "^3.5.5"
 instructorembedding = "^1.0.1"
 numpy = ">=1.26.4"
 gdown = "^5.2.0"
@@ -60,6 +61,7 @@ gradio = "^5.43.1"
 core-db = "2.2.0"
 bytewax = "^0.21.1"
 webdriver-manager = "^4.0.2"
+flagembedding = "^1.3.5"
 
 
 [build-system]

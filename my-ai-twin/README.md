@@ -50,28 +50,29 @@ for this architecture by default. Installing chromium for arm64 architecture on 
 -d '{"user": "Samba Pedapalli", "link": "https://medium.com/@sambas/framework-to-manage-engineering-teams-on-continuous-basis-7c8d05880d6a"}'`
 3. Run the cmd to test Github URL : `curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
 	  	-d '{"user": "Samba Pedapalli", "link": "https://github.com/spedapalli/ml-ai-projects/tree/my-ai-twin-1/my-ai-twin"}'`
-4. **Debugging** : To debug the crawler code, given it uses AWS Lambda (RIE), it involves few steps as detailed below :
+4. **Debugging** : To debug the crawler code, given it uses AWS Lambda (RIE), it involves few steps as detailed further below and here is a high level flow.
+Lambda starts -> Handler imports -> debugpy.listen() (in the handler class) opens port 5678 -> Code continues normal execution -> Attach debugger in VS Code
+Steps :
 	a. Refer to launch.json and its config with debugpy
 	b. Make sure you install debugpy in your environment
-	c. In app/src/datapipe/aws_lambda_handler.py, uncomment below lines :
-	```
-	import debugpy
-	print("Waiting for debugger attach.....")
-	debugpy.wait_for_client()
-	print("Debugger attached!")
-	```
-	d. In .docker/Dockerfile.data_crawlers, uncomment out below lines :
+	c. In .docker/Dockerfile.data_crawlers, uncomment out below lines :
 	```
 	ENV AWS_LAMBDA_SIMULATOR_LOC=/usr/local/bin
 	RUN mkdir -p ${AWS_LAMBDA_SIMULATOR_LOC} && curl -Lo ${AWS_LAMBDA_SIMULATOR_LOC}/aws-lambda-rie \
 	https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie \
 	&& chmod +x ${AWS_LAMBDA_SIMULATOR_LOC}/aws-lambda-rie
 ```
-	e. In docker-compose.yml, under `data-crawlers:` config, uncomment out below lines :
+	d. In docker-compose.yml, under `data-crawlers:` config, uncomment out below lines :
 	```
 	entrypoint: ["/usr/local/bin/aws-lambda-rie"]
     command: ["/var/lang/bin/python", "-Xfrozen_modules=off", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "awslambdaric", "datapipe.aws_lambda_handler.handler"] # for debug only. Comment out for prod deployment
 	```
+	f. Set breakpoints in the code.
+	g. Build the docker container using `docker compose -f docker-compose.yml up --build -d` or in case of changes to data-crawlers which is the entry point - `docker-compose build data-crawlers`.
+	h. Run the CURL command to trigger AWS Lambda function. `curl -X POST "http://localhost:9010/2015-03-31/functions/function/invocations" \
+		-d '{"user": "Samba Pedapalli", "link": "https://medium.com/@sambas/framework-to-manage-engineering-teams-on-continuous-basis-7c8d05880d6a"}'`
+	i. Attach VS code debugger using "Python Debugger : Debug Python file". If this is not configured, make sure to config launch.json.
+	j.
 
 ##### Test CDC :
 1. Build the docker containers using the same command as above in [Test Data Crawlers](#test-data-crawlers-)
@@ -79,9 +80,17 @@ for this architecture by default. Installing chromium for arm64 architecture on 
 
 ##### Unit Test Feature pipeline :
 1. `cd` into the directory. Switch to the local python environment by running `source .venv/bin/activate`.
-2. In your docker console, make sure all the 3 mongodb instances are running and active.
-2. Run `poetry run python -m retriever`
-3. To debug, in VS Code open `my-ai-twin/app/src/featurepipe/retriever.py`. Go to Run / Debug and click on "Python Debugger : Debug Python file"
+2. In your docker console, make sure all the 3 mongodb instances are running and active. NOTE Unit tests are currently designed to run against localhost
+3. Run `pytest` to run all the unit tests.
+4. To run a single test run `pytest <test file path>` eg: `pytest app/test/featurepipe/dataset_generator_test.py`
+
+There are few files in the `src` directory with `main` function and if you need to run these for any reason, follow the process below which demonstrates the process to run `retriever_localtest.py`:
+1. `cd app/src/featurepipe`, which is where a test file exists to run and test RAG. Run `poetry run python -m retriever_localtest`
+2. To debug, in VS Code open `my-ai-twin/app/src/featurepipe/retriever_localtest.py`. Go to Run / Debug and click on "Python Debugger : Debug Python file"
 
 
 ##### Contact and Further Information
+
+
+### Work In Progress :
+[8 Jan 2026] : Testing with Git repo. Data gets written to cleaned_repositories in QDrant but the embeddings do not get written to vector_repositories. In feature-pipe docker pod, the log shows below message, which indicates the embeddings werent created and unsure if it is taking too long given the large files :

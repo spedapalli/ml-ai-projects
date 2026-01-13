@@ -2,7 +2,7 @@ services:
   mongodb1:
     image: mongo:8
     container_name: my-ai-twin-mongodb1
-    command: ["mongod", "--replSet", "mdb-replica-set", "--bind_ip_all", "--port", "30001"]
+    command: [ "mongod", "--replSet", "mdb-replica-set", "--bind_ip_all", "--port", "30001" ]
     volumes:
       - mongo-replica-1-data:/data/db
     ports:
@@ -16,11 +16,10 @@ services:
       start_period: 30s
     restart: always
 
-
   mongodb2:
     image: mongo:8
     container_name: my-ai-twin-mongodb2
-    command: ["mongod", "--replSet", "mdb-replica-set", "--bind_ip_all", "--port", "30002"]
+    command: [ "mongod", "--replSet", "mdb-replica-set", "--bind_ip_all", "--port", "30002" ]
     volumes:
       - mongo-replica-2-data:/data/db
     ports:
@@ -34,11 +33,10 @@ services:
       start_period: 30s
     restart: always
 
-
   mongodb3:
     image: mongo:8
     container_name: my-ai-twin-mongodb3
-    command: ["mongod", "--replSet", "mdb-replica-set", "--bind_ip_all", "--port", "30003"]
+    command: [ "mongod", "--replSet", "mdb-replica-set", "--bind_ip_all", "--port", "30003" ]
     volumes:
       - mongo-replica-3-data:/data/db
     ports:
@@ -51,7 +49,6 @@ services:
       interval: 10s
       start_period: 30s
     restart: always
-
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -68,18 +65,17 @@ services:
       - mq-network
     volumes:
       - ./rabbitmq/data/:/var/lib/rabbitmq/
-      - ./rabbitmq/conf/definitions.json:/etc/rabbitmq/definitions.json:ro  #read only
-      - ./rabbitmq/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro    #read only
+      - ./rabbitmq/conf/definitions.json:/etc/rabbitmq/definitions.json:ro #read only
+      - ./rabbitmq/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro #read only
       # - ./rabbitmq/log/:/var/log/rabbitmq
     restart: always
     healthcheck:
       # test: ["CMD", "nc", "-z", "rabbitmq", "5673"]
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
       interval: 5s
       timeout: 30s
       retries: 5
       start_period: 30s
-
 
   qdrant:
     image: qdrant/qdrant:latest
@@ -97,9 +93,8 @@ services:
       - qdrant-data:/qdrant_data
     restart: always
 
-
   # Data Crawlers
-  data-crawlers:
+  data_crawlers:
     image: "my-ai-twin-data-crawlers"
     container_name: my-ai-twin-data-crawlers
     platform: "linux/amd64"
@@ -113,8 +108,8 @@ services:
     ports:
       - "9010:8080"
       - "5678:5678" #for debugging AWS Lambda Runtime int emulator(RIE) using debugpy
-    # entrypoint: ["/usr/local/bin/aws-lambda-rie"]
-    # command: ["/var/lang/bin/python", "-Xfrozen_modules=off", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "awslambdaric", "datapipe.aws_lambda_handler.handler"] # for debug only. Comment out for prod deployment
+    # entrypoint: [ "/usr/local/bin/aws-lambda-rie" ]
+    # command: [ "/var/lang/bin/python", "-Xfrozen_modules=off", "-m", "debugpy", "--listen", "0.0.0.0:5678", "--wait-for-client", "-m", "awslambdaric", "datapipe.aws_lambda_handler.handler" ] # for debug only. Comment out for prod deployment
     depends_on:
       - mongodb1
       - mongodb2
@@ -141,7 +136,6 @@ services:
       rabbitmq:
         condition: service_healthy
 
-
   feature_pipeline:
     image: "llm-twin-featurepipe"
     container_name: llm-twin-featurepipe
@@ -165,14 +159,10 @@ services:
         condition: service_started
     restart: always
 
-
 volumes:
-  mongo-replica-1-data:
-    # driver: local
-  mongo-replica-2-data:
-    # driver: local
-  mongo-replica-3-data:
-    # driver: local
+  mongo-replica-1-data: # driver: local
+  mongo-replica-2-data: # driver: local
+  mongo-replica-3-data: # driver: local
   qdrant-data:
 
 

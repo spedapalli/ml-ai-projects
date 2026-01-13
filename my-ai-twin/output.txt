@@ -1,0 +1,86 @@
+2025-12-10 17:11:14 [info     ] Database host url: mongodb://mongodb1:30001,mongodb2:30002,mongodb3:30003/?replicaSet=mdb-replica-set cls=/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/app/src/db/mongo.py
+2025-12-10 17:11:15 [info     ] Connection to database with uri: mongodb://mongodb1:30001,mongodb2:30002,mongodb3:30003/?replicaSet=mdb-replica-set successful cls=/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/app/src/db/mongo.py
+OPIK: Started logging traces to the "my-ai-twin" project at https://www.comet.com/opik/api/v1/session/redirect/projects/?trace_id=019b0af6-602e-7cc5-b04f-06ab2a38b2bb&path=aHR0cHM6Ly93d3cuY29tZXQuY29tL29waWsvYXBp.
+/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pydantic/v1/main.py:1054: UserWarning: LangSmith now uses UUID v7 for run and trace identifiers. This warning appears when passing custom IDs. Please use: from langsmith import uuid7
+            id = uuid7()
+Future versions will require UUID v7.
+  input_data = validator(cls_, input_data)
+Error in OpikTracer.on_chain_end callback: TracerException('No indexed run ID db374edb-b491-4461-85e9-9c13be501e6d.')
+2025-12-10 17:11:20 [info     ] Successfully generated queries for search:  cls=core.rag.vector_retriever num_queries=5
+2025-12-10 17:11:21 [info     ] Successfully extracted the user full name from the query. cls=core.rag.llm_self_query user_full_name='Samba Pedapalli'
+2025-12-10 17:11:21 [info     ] The extracted user first and last name from the query are:  cls=core.rag.llm_self_query first_name=Samba last_name=Pedapalli
+Traceback (most recent call last):
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/app/src/featurepipe/retriever_localtest.py", line 32, in <module>
+    hits = retriever.retrieve_top_k(k= 6, to_expand_to_n_queries=5)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/opik/decorator/base_track_decorator.py", line 356, in wrapper
+    raise func_exception
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/opik/decorator/base_track_decorator.py", line 329, in wrapper
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/app/src/core/rag/vector_retriever.py", line 119, in retrieve_top_k
+    author_id = self._metadata_extractor.generate_response(self.query)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/opik/decorator/base_track_decorator.py", line 356, in wrapper
+    raise func_exception
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/opik/decorator/base_track_decorator.py", line 329, in wrapper
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/app/src/core/rag/llm_self_query.py", line 51, in generate_response
+    user_id = UserDocument.get_or_create(first_name=first_name, last_name=last_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/app/src/models/db/base_document.py", line 84, in get_or_create
+    instance = collection.find_one(filter_options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/collection.py", line 1755, in find_one
+    for result in cursor.limit(-1):
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 1289, in __next__
+    return self.next()
+           ^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 1265, in next
+    if len(self._data) or self._refresh():
+                          ^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 1213, in _refresh
+    self._send_message(q)
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/cursor.py", line 1108, in _send_message
+    response = client._run_operation(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1938, in _run_operation
+    return self._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2047, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2014, in _retry_internal
+    ).run()
+      ^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2765, in run
+    return self._read() if self._is_read else self._write()
+           ^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2910, in _read
+    self._server = self._get_server()
+                   ^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 2858, in _get_server
+    return self._client._select_server(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/mongo_client.py", line 1833, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/topology.py", line 409, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/topology.py", line 387, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/topology.py", line 294, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sambapedapalli/work/code/ml-ai-projects/my-ai-twin/.venv/lib/python3.11/site-packages/pymongo/synchronous/topology.py", line 344, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: mongodb3:30003: [Errno 8] nodename nor servname provided, or not known (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),mongodb1:30001: [Errno 8] nodename nor servname provided, or not known (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms),mongodb2:30002: [Errno 8] nodename nor servname provided, or not known (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 693a1a32685efac852b2500c, topology_type: ReplicaSetNoPrimary, servers: [<ServerDescription ('mongodb1', 30001) server_type: Unknown, rtt: None, error=AutoReconnect('mongodb1:30001: [Errno 8] nodename nor servname provided, or not known (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('mongodb2', 30002) server_type: Unknown, rtt: None, error=AutoReconnect('mongodb2:30002: [Errno 8] nodename nor servname provided, or not known (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>, <ServerDescription ('mongodb3', 30003) server_type: Unknown, rtt: None, error=AutoReconnect('mongodb3:30003: [Errno 8] nodename nor servname provided, or not known (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>

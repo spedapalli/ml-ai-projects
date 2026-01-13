@@ -1,15 +1,21 @@
 from abc import ABC, abstractmethod
+from FlagEmbedding import FlagAutoModel, AbsEmbedder
 
 from models.content_enum import ContentDataEnum
 from models.base_models import DataModel
 from models.chunk_models import PostChunkModel, ArticleChunkModel, RepositoryChunkModel
 from models.db_vector_models import PostVectorDBModel, ArticleVectorDBModel, RepositoryVectorDBModel
 
-from featurepipe.utils.embeddings_util import convert_text_to_embedding
+from featurepipe.utils.embeddings_util import convert_text_to_embedding, convert_repotext_to_embedding_BGE
 
+from core.config import settings
+from core.logger_utils import get_logger
+
+logger = get_logger(__name__)
 
 class EmbeddingDataHandler(ABC):
 
+    repo_code_model: AbsEmbedder = FlagAutoModel.from_finetuned(settings.EMBEDDING_MODEL_FOR_CODE_ID)
     @abstractmethod
     def embed(self, data_model: DataModel) -> DataModel:
         pass
@@ -49,7 +55,7 @@ class RepositoryEmbeddingHandler(EmbeddingDataHandler) :
         """
         Embeds the repository chunk content using the model in #featurepipe.utils.embeddings_util.py.
         """
-
+        logger.info("In Repository Embedding Handler........")
         return RepositoryVectorDBModel(
             entry_id= data_model.entry_id,
             type= data_model.type,
@@ -58,7 +64,7 @@ class RepositoryEmbeddingHandler(EmbeddingDataHandler) :
             chunk_id= data_model.chunk_id,
             chunk_content= data_model.chunk_content,
             # embedded_content= convert_text_to_embedding(data_model.chunk_content),
-            embedded_content= convert_repotext_to_embedding(data_model.chunk_content),
+            embedded_content= convert_repotext_to_embedding_BGE(self.repo_code_model, data_model.chunk_content),
             owner_id= data_model.owner_id,
         )
 

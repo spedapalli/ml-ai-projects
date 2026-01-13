@@ -1,8 +1,10 @@
 from qdrant_client import QdrantClient, models
 from qdrant_client.http.models import Batch, Distance, VectorParams
+from qdrant_client.conversions import common_types as types
 
 from core import logger_utils
 from core.config import settings
+from models.content_enum import ContentDataEnum
 
 logger = logger_utils.get_logger(__name__)
 
@@ -45,11 +47,15 @@ class QdrantDatabaseConnector:
         """ Creates a vector collection with embeddings: dimensionality size=348 (core.config.settings.EMBEDDING_SIZE)
         and distance=COSINE.
         """
+        embed_size:int = settings.EMBEDDING_MODEL_FOR_CODE_VECTOR_LENGTH \
+                            if ContentDataEnum.REPOSITORIES in collection_name \
+                            else settings.EMBEDDING_SIZE
+
         try:
             self._instance.create_collection(
                 collection_name=collection_name,
                 vectors_config=VectorParams(
-                    size=settings.EMBEDDING_SIZE, distance=Distance.COSINE))
+                    size=embed_size, distance=Distance.COSINE))
         except Exception as e:
             logger.error(f"Failed to create Vector collection {collection_name} given the exception ")
             logger.exception(e)
@@ -81,7 +87,17 @@ class QdrantDatabaseConnector:
                                                limit=limit)
         return response.points
 
-    def scroll(self, collection_name:str, limit:int):
+    def scroll(self, collection_name:str, limit:int) -> tuple[list[types.Record], types.PointId | None]:
+        """Use to scroll through a collection that has large number of records, by specifying the param limit.
+
+        Args:
+            collection_name (str): underlying Collection name
+            limit (int): Max number of records to retrieve
+
+        Returns:
+            tuple[list[types.Record], types.PointId | None]: Tuple of Db records containing
+            list with each Point (record in Db) and its associated unique Id in Db
+        """
         return self._instance.scroll(collection_name=collection_name, limit=limit)
 
     def close(self):

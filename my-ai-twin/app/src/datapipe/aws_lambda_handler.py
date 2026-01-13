@@ -16,9 +16,8 @@ logger = Logger(service="llm-twin-course/crawler")
 
 ### ------- for Debug purposes only --------
 # import debugpy
-# print("Waiting for debugger attach.....")
-# debugpy.wait_for_client()
-# print("Debugger attached!")
+# debugpy.listen(("0.0.0.0", 5678))
+# print("Debugger server started on port 5678, ready for attachment")
 ### ------- End Debug code -----------------
 
 _dispatcher = CrawlerDispatcher()

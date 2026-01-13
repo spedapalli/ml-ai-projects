@@ -16,9 +16,20 @@ class GithubCrawler (BaseCrawler):
 
     model = RepositoryDocument
 
-    def __init__(self, ignore=(".git", ".toml", ".lock", ".png")) -> None:
+    def __init__(self,
+                 ignore=(".git", ".toml", ".lock", ".png", ".venv", ".pdf", \
+                    "__pycache__", "__init__.py", "__init__.pyc", ".csv", ".pkl"),
+                 ignore_dirs=("data", "data-analysis", "images", "logs", "temp")) -> None:
+        """_summary_
+
+        Args:
+            ignore (tuple, optional): special files or dirs to ignore. Defaults to (".git", ".toml", ".lock", ".png").
+            process_dirs (tuple, optional): Dirs that add value to process and generate code. Ignore data, temp dir or other dirs that add no value.
+            Defaults to ("app", "src", "ui", "scripts", "ansible", "test").
+        """
         super().__init__()
         self._ignore = ignore
+        self._ignore_dirs = ignore_dirs
 
 
     def extract(self, link: str, **kwargs) -> None:
@@ -29,16 +40,18 @@ class GithubCrawler (BaseCrawler):
 
         try :
             os.chdir(local_temp)
-            subprocess.run(["git", 'clone', 'link'])
+            subprocess.run(['git', 'clone', link], check=True, capture_output=True, text=True)
 
             repo_path = os.path.join(local_temp, os.listdir(local_temp)[0]) # get the project root dir
 
-            tree = {}
             for root, dirs, files in os.walk(repo_path):
                 dir = root.replace(repo_path, "").lstrip("/")
-                if (dir.startswith(self._ignore)):
+                # Ignore any dir that are in ignore list OR any dirs that are not in Process dir
+                last_dir = dir.split("/")[-1]
+                if (dir.startswith(self._ignore) or (last_dir in self._ignore_dirs) ):
                     continue
 
+                tree = {}
                 for file in files:
                     if (file.endswith(self._ignore)):
                         continue
@@ -47,12 +60,14 @@ class GithubCrawler (BaseCrawler):
                     with open(os.path.join(root, file), 'r', errors='ignore') as f:
                         tree[file_path] = f.read().replace(" ", "")
 
-                instance = self.model(
-                    name = repo_name, link=link, content = tree, owner_id=kwargs.get('user')
-                )
-                instance.save()
+                if tree :
+                    instance = self.model(
+                        name = repo_name, link=link, content = tree, owner_id=kwargs.get('user')
+                    )
+                    instance.save()
 
-        except Exception:
+        except Exception as e:
+            logger.error(f"Failed to scrape Github repo : {e}", exc_info=True)
             raise
         finally:
             shutil.rmtree(local_temp)

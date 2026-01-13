@@ -3,6 +3,8 @@
 FROM python:3.11-slim-bookworm AS builder
 
 ENV POETRY_VERSION=2.1.3
+# Prevent Python from writing .pyc files to disk and bloat the docker pod
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # install dependencies
 RUN apt-get update && apt-get install -y \
@@ -32,7 +34,7 @@ RUN poetry config virtualenvs.create false && \
 # install dependecies
 RUN poetry install --no-root
 
-# Copy code
+# ------ Stage 2 : Copy code -------
 COPY ./app/src/cdc ./cdc
 # dependencies
 COPY ./app/src/core ./core

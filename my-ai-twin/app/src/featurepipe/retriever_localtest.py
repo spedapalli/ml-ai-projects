@@ -28,11 +28,16 @@ if __name__ == "__main__":
         Could you draft an article paragraph discussing RAG ? I am particularly interested in how to design a RAG system.
         """
 
+    code_query = """
+        Hello I am Samba Pedapalli.
+        Can you write a simple Python function adding 2 numbers ?
+    """
+
     # to test locally
     # to test locally
     # settings.patch_localhost() # Moved to top level
 
-    retriever = VectorRetriever(query=query)
+    retriever = VectorRetriever(query=code_query)
     hits = retriever.retrieve_top_k(k= 6, to_expand_to_n_queries=5)
     reranked_hits = retriever.rerank(hits=hits, keep_top_k=5)
 

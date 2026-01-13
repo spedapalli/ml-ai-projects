@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 class LlmSelfQuery:
 
-    opik_tracker = OpikTracer(tags=["SelfQuery"])
+    opik_tracer = OpikTracer(tags=["SelfQuery"])
 
     @staticmethod
     @opik.track(name="SelfQuery.generate_response")
@@ -32,8 +32,8 @@ class LlmSelfQuery:
 
         # response = chain.invoke({"question": query})
         # The assumption is user inputs their name or id. If not, None is returned.
-        prompt_response = prompt.invoke({"question": query}, {"callbacks": [LlmSelfQuery.opik_tracker]})
-        response = model.invoke(prompt_response, {"callbacks": [LlmSelfQuery.opik_tracker]})
+        prompt_response = prompt.invoke({"question": query}, {"callbacks": [LlmSelfQuery.opik_tracer]})
+        response = model.invoke(prompt_response, {"callbacks": [LlmSelfQuery.opik_tracer]})
         response = response.content
         user_full_name = response.strip("\n")
 

@@ -1,7 +1,7 @@
 from models.db.base_document import BaseDocument
 
 from pydantic import Field
-
+from datetime import datetime
 
 class UserDocument(BaseDocument):
     """ User specific details """
@@ -18,6 +18,7 @@ class RepositoryDocument(BaseDocument):
     link: str
     content: dict
     owner_id: str = Field(alias="owner_id")
+    store_datetime: datetime = datetime.now()
 
     class Settings:
         name= "repositories"
@@ -28,6 +29,7 @@ class PostDocument(BaseDocument):
     platform: str
     content: dict
     author_id: str = Field(alias="author_id")
+    store_datetime: datetime = datetime.now()
 
     class Settings:
         name="posts"
@@ -43,6 +45,7 @@ class ArticleDocument(BaseDocument):
     link: str
     content: dict
     author_id: str = Field(alias="author_id")
+    store_datetime: datetime = datetime.now()
 
     class Settings:
         name = "articles"

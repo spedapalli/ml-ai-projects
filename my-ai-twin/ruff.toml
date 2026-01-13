@@ -1,0 +1,6 @@
+exclude = [
+    ".venv",".vscode", ".git", ".pytest_cache", "rabbitmq", ".dockerignore", ".python-version", "*.log",
+]
+line-length = 80
+indent-width = 4
+

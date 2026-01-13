@@ -19,7 +19,7 @@ def chunk_text(text:str) -> list[str]:
     # use the default model "sentence-transformers/all-mpnet-base-v2"
     token_splitter = SentenceTransformersTokenTextSplitter(
         chunk_overlap=50,
-        tokens_per_chunk= settings.EMNEDDING_MODEL_MAX_INPUT_LENGTH,
+        tokens_per_chunk= settings.EMBEDDING_MODEL_MAX_INPUT_LENGTH,
         model_name= settings.EMBEDDING_MODEL_ID
     )
 

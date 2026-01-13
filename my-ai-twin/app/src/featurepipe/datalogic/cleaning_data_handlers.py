@@ -17,7 +17,7 @@ class CleaningDataHander(ABC):
         '''
         Implementation of this method must ensure the returned DataModel object has the following attributes :
         entry_id, cleaned_content, author_id, type. These are critical for downstream Handler's processing.
-        '''`
+        '''
         pass
 
 

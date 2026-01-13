@@ -4,10 +4,10 @@ from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ref to project root dir
-ROOT_DIR = str(Path(__file__).parent.parent.parent)
+ROOT_DIR = str(Path(__file__).parent.parent.parent.parent)
 
 class AppSettings(BaseSettings) :
-    model_config = SettingsConfigDict(env_file=ROOT_DIR, env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file=f"{ROOT_DIR}/.env", env_file_encoding='utf-8', extra='ignore')
 
     MONGO_DB_1:str = 'mongodb1:30001'
     MONGO_DB_2:str = 'mongodb2:30002'
@@ -36,7 +36,7 @@ class AppSettings(BaseSettings) :
     OPENAI_MODEL_ID: str = "gpt-4o-mini"
     OPENAI_API_KEY: SecretStr | None = None
 
-    # ComentML config
+    # CometML config
     COMET_API_KEY: str | None = None
     COMET_WORKSPACE: str | None = None
     COMET_PROJECT: str = "llm-twin"
@@ -59,9 +59,13 @@ class AppSettings(BaseSettings) :
     # Embeddings config
     EMBEDDING_MODEL_ID: str = "BAAI/bge-small-en-v1.5"
     EMBEDDING_MODEL_MINI_ID: str = "sentence-transformers/all-MiniLM-L6-v2"
-    EMBEDDING_MODEL_FOR_CODE_ID: str = "hkunlp/instructor-xl"
-    EMNEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
+    EMBEDDING_MODEL_MAX_INPUT_LENGTH: int = 512
     EMBEDDING_SIZE: int = 384 # default size output by the abv model BAAI/bge-small-en-v1.5
+    # embedding models for github code
+    # EMBEDDING_MODEL_FOR_CODE_ID: str = "hkunlp/instructor-xl"
+    # EMBEDDING_MODEL_FOR_CODE_VECTOR_LENGTH: int = 768    # default output size of embeddings by hkunlp/instructor-xl
+    EMBEDDING_MODEL_FOR_CODE_ID: str = "BAAI/bge-large-en-v1.5"
+    EMBEDDING_MODEL_FOR_CODE_VECTOR_LENGTH: int = 1024    # max input text length for code embeddings
     EMBEDDING_MODEL_DEVICE: str = "cpu"
 
     CROSS_ENCODER_MODEL_ID: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
@@ -71,7 +75,8 @@ class AppSettings(BaseSettings) :
     OPIK_API_KEY: str | None = None
 
     def patch_localhost(self) -> None:
-        self.MONGO_DATABASE_HOST = "mongodb://localhost:30001/?directConnection=true"
+        self.MONGO_DATABASE_HOST = "mongodb://localhost:30002/?directConnection=true"
+        # self.MONGO_DATABASE_HOST = f"mongodb://localhost:30001,localhost:30002,localhost:30003/?replicaSet={self.MONGO_REPLICA_SET}"
         self.QDRANT_DATABASE_HOST = "localhost"
         self.RABBITMQ_HOST = "localhost"
 

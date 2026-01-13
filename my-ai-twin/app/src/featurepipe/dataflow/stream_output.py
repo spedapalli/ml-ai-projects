@@ -106,7 +106,7 @@ class QdrantVectorDataSink(StatelessSinkPartition):
         ids, vectors, metadata = zip(*payloads)
         # get collection name from metadata
         collection_name = get_vector_collection(data_type=metadata[0]['type'])
-        # logger.debug(f"Data being inserted into Qdrant has # of Ids= {ids}, Vector size= {vectors}, Metadata: {metadata}")
+        logger.info(f"Data being inserted into Qdrant has # of Ids= {ids}, Vector size= {len(vectors)}, Metadata: {len(metadata)}")
 
         self._client.write_data(collection_name=collection_name, points=Batch(ids=ids, vectors=vectors, payloads=metadata))
 

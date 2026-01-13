@@ -6,8 +6,9 @@ from models.base_models import DataModel
 from models.db_clean_models import PostDBCleanedModel, ArticleDBCleanedModel, RepositoryDBCleanedModel
 from models.chunk_models import PostChunkModel, ArticleChunkModel, RepositoryChunkModel
 from featurepipe.utils.text_chunking_util import chunk_text
+from core.logger_utils import get_logger
 
-
+logger = get_logger(__name__)
 
 class ChunkingDataHandler(ABC):
 
@@ -67,6 +68,8 @@ class ArticleChunkingHandler(ChunkingDataHandler):
 class RepositoryChunkingHandler(ChunkingDataHandler):
 
     def chunk(self, data_model: RepositoryDBCleanedModel) -> list[RepositoryChunkModel]:
+        logger.info("In Repository Chunking Handler.......")
+
         data_models_list = []
 
         text = data_model.cleaned_content
