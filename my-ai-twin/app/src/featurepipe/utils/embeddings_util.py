@@ -52,8 +52,8 @@ def batch_encode_text(texts: list[str]) -> np.ndarray:
     return model.encode(
             sentences=texts,
             batch_size=32,
-            convert_to_numpy=True
-            # show_progress_bar=False,
+            convert_to_numpy=True,
+            show_progress_bar=False,
             # normalize_embeddings=True
             )
 
@@ -64,6 +64,7 @@ def batch_encode_code_using_BGE(texts: list[str]) -> np.ndarray :
     return model.encode(sentences=texts,
                     batch_size=32,
                     convert_to_numpy=True,
+                    show_progress_bar=False,
                     )
 
 

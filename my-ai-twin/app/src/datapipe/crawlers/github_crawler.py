@@ -66,7 +66,7 @@ class GithubCrawler (BaseCrawler):
                     instance = self.model(
                         name = repo_name, link=link, content = tree, owner_id=kwargs.get('user')
                     )
-                    # instance.save()
+                    instance.save()
 
         except Exception as e:
             logger.error(f"Failed to scrape Github repo : {e}", exc_info=True)

@@ -1,3 +1,5 @@
+from typing_extensions import deprecated
+import time
 from core.logger_utils import get_logger
 from models.content_enum import ContentDataEnum
 from models.base_models import DataModel
@@ -60,17 +62,32 @@ class ChunkingDispatcher:
 
 class EmbeddingDispatcher:
     embedding_factory = EmbeddingHandlerFactory()   #class var
+    # vars to capture stats on batch embedding
+    total_embedding_time = 0
+    total_embedded_items = 0
+    # vars to capture stats on each individual embedding
+    single_total_embedding_time = 0
+    single_total_embedded_items = 0
 
     @classmethod
+    @deprecated("Use the batching function dispatch_batch_embedder(...)")
     def dispatch_embedder(cls, data_model:DataModel) -> DataModel:
         logger.info("In Embedding Dispatcher........")
         data_type = data_model.type
         handler: EmbeddingDataHandler = cls.embedding_factory.create_handler(data_type=data_type)
+
+        # measure time
+        start_time = time.perf_counter()
         embedded_chunk_model: DataModel = handler.embed(data_model=data_model)
+
+        time_elapsed: int | float = time.perf_counter() - start_time
+        cls.single_total_embedded_items += 1
+        cls.single_total_embedding_time += time_elapsed
 
         logger.info("Data chunk embeddings created successfully ",
                     data_type=data_type,
                     embedding_len=len(embedded_chunk_model.embedded_content))
+        logger.info(f"Stats to embed each item individually: Total # of items: {cls.single_total_embedded_items}, Total Time= {cls.single_total_embedding_time}")
 
         return embedded_chunk_model
 
@@ -93,8 +110,18 @@ class EmbeddingDispatcher:
         # all items in the batch must be same type
         data_type: str = data_models[0].type
         handler: EmbeddingDataHandler = cls.embedding_factory.create_handler(data_type)
+
+        # measure total time
+        start_time: int | float = time.perf_counter()
         embeds_models = handler.embed_batch(data_models=data_models)
+        time_elapsed: int | float = time.perf_counter() - start_time
+
+
+        cls.total_embedding_time += time_elapsed
+        cls.total_embedded_items += len(embeds_models)
+
         logger.info(f"Batch embedded {len(embeds_models)} chunks", data_type=data_type)
+        logger.info(f"Total time to embed a total of {cls.total_embedded_items} items, so far, is= {cls.total_embedding_time}")
 
         return (batch_key, embeds_models)
 
