@@ -268,7 +268,7 @@ langchain==0.3.27
     #   langchain-community
 langchain-community==0.3.31
     # via my-ai-twin (pyproject.toml)
-langchain-core==0.3.80
+langchain-core==0.3.81
     # via
     #   langchain
     #   langchain-community
@@ -692,7 +692,7 @@ unstructured==0.18.13
     # via my-ai-twin (pyproject.toml)
 unstructured-client==0.42.3
     # via unstructured
-urllib3==2.5.0
+urllib3==2.6.3
     # via
     #   botocore
     #   comet-ml

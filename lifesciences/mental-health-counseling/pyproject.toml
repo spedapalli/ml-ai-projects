@@ -76,7 +76,7 @@ dependencies = [
     "typing-extensions==4.14.1",
     "typing-inspection==0.4.1",
     "tzdata==2025.2",
-    "urllib3==2.5.0",
+    "urllib3==2.6.3",
     "uvicorn==0.35.0",
     "webencodings==0.5.1",
 ]
