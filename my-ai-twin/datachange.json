@@ -1,0 +1,26 @@
+{
+    "_id": {
+        "_data": "826920E0C8000000012B042C0100296E5A10049D76D505826344A59ABA0E7C12669BD7463C6F7065726174696F6E54797065003C696E736572740046646F63756D656E744B657900463C5F6964003C33346662376431362D316537622D346434362D393935362D31633963656437663634363900000004"
+    },
+    "operationType": "insert",
+    "clusterTime": "Timestamp(1763762376,1)",
+    "wallTime": "datetime.datetime(2025,11,21,21,59,36,466000)",
+    "fullDocument": {
+        "_id": "34fb7d16-1e7b-4d46-9956-1c9ced7f6469",
+        "platform": "medium",
+        "link": "https://medium.com/@sambas/framework-to-manage-engineering-teams-on-continuous-basis-7c8d05880d6a",
+        "content": {
+            "Title": None,
+            "Subtitle": None,
+            "Content": "Just a moment...medium.comVerify you are human by completing the action below.medium.com needs to review the security of your connection before proceeding.Verification successfulWaiting for medium.com to respond...Enable JavaScript and cookies to continue\nRay ID: 9a23744e4ca89e6aPerformance & security by Cloudflare"
+        },
+        "author_id": "e20c22bc-bceb-4649-a65f-7b16499a5fcd"
+    },
+    "ns": {
+        "db": "twin",
+        "coll": "articles"
+    },
+    "documentKey": {
+        "_id": "34fb7d16-1e7b-4d46-9956-1c9ced7f6469"
+    }
+}

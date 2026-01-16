@@ -1,0 +1,18 @@
+{
+    "recommendations":[
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+        "astral-sh.ty",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter",
+        "tamasfe.even-better-toml",
+        "github.vscode-github-actions",
+        "postman.postman-for-vscode",
+        "ms-azuretools.vscode-docker",
+        "ms-vscode.makefile-tools",
+        "ms-python.vscode-python-envs",
+        "aaron-bond.better-comments",
+        "bierner.markdown-mermaid", //markdown for UML dg
+    ]
+}

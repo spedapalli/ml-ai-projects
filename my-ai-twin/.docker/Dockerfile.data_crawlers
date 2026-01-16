@@ -1,0 +1,133 @@
+# Amazonlinux is RPM based linux based on Fedora and CentOS
+FROM public.ecr.aws/lambda/python:3.12 AS build
+
+RUN dnf update
+
+FROM public.ecr.aws/lambda/python:3.12
+
+ENV POETRY_VERSION=2.1.3
+# Prevent Python from writing .pyc files to disk and bloat the docker pod
+ENV PYTHONDONTWRITEBYTECODE=1
+
+
+RUN dnf update -y && \
+    dnf install -y \
+    # core system and dev utils
+    wget \
+    git \
+    tar.x86_64 \
+    # below specific for RPM related OS
+    openssl-devel \
+    libcurl-devel \
+    postgresql-devel \
+    # system and inter-process commn libs
+    atk \
+    at-spi2-atk \
+    alsa-lib \
+    cups-libs \
+    dbus-glib \
+    dbus-glib-devel \
+    glibc \
+    gtk3 \
+    liberation-fonts \
+    libdrm \
+    libxkbcommon \
+    libX11 \
+    libXcomposite \
+    libXcursor \
+    libXdamage \
+    libXext \
+    libXi \
+    libXrandr \
+    libXScrnSaver \
+    libXt \
+    libXtst \
+    nss \
+    pango \
+    unzip \
+    vulkan-loader \
+    xdg-utils
+
+
+# install chrome in docker
+RUN dnf install -y glibc && \
+    wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm && \
+    ls . && \
+    rpm -i ./google-chrome-stable_current_x86_64.rpm && \
+    ls . && \
+    rm google-chrome-stable_current_x86_64.rpm
+
+# Install ChromeDriver matching Chrome version
+RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1) && \
+    CHROMEDRIVER_VERSION=$(curl -sS "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}") && \
+    wget -q "https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip" && \
+    unzip chromedriver-linux64.zip && \
+    mv chromedriver-linux64/chromedriver /usr/local/bin/ && \
+    chmod +x /usr/local/bin/chromedriver && \
+    rm -rf chromedriver-linux64.zip chromedriver-linux64
+
+
+RUN dnf update -y && \
+    dnf install -y gcc gcc-c++ make automake autoconf libtool pkgconfig
+
+# ----- for debugging purposes only. Comment out for PROD -----
+ENV AWS_LAMBDA_SIMULATOR_LOC=/usr/local/bin
+RUN mkdir -p ${AWS_LAMBDA_SIMULATOR_LOC} && curl -Lo ${AWS_LAMBDA_SIMULATOR_LOC}/aws-lambda-rie \
+    https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie \
+    && chmod +x ${AWS_LAMBDA_SIMULATOR_LOC}/aws-lambda-rie
+
+# provides useradd and groupadd commands - TODO : To add below back once all the kinks are flushed out
+# RUN dnf install -y shadow-utils
+# Create non-root user for security
+# RUN adduser --disabled-password appuser
+# RUN /usr/sbin/useradd -m appuser
+
+
+RUN mkdir /app
+WORKDIR /app
+# RUN chown -R appuser:appuser .
+# Switch to non-root user
+# USER appuser
+ARG LAMBDA_TASK_ROOT=/app
+
+# copy toml and poetry build files
+COPY ./pyproject.toml ./poetry.lock ./
+
+# Copy application code
+# COPY --chown=appuser:appuser . .
+# RUN chown -R appuser:appuser /var/task
+
+# Install Poetry with cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m pip install --upgrade pip && \
+    pip install "poetry==$POETRY_VERSION" && \
+    pip install poetry-plugin-export
+
+# Export dependencies (cached if pyproject.toml/poetry.lock unchanged)
+RUN --mount=type=cache,target=/root/.cache/pypoetry \
+    poetry export -f requirements.txt --output requirements.txt
+
+# Install dependencies with both pip and poetry cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=cache,target=/root/.cache/pypoetry \
+    pip install --no-deps -r requirements.txt
+
+# Optional TLS CA only to store extracted data in Document DB
+RUN wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -P ${LAMBDA_TASK_ROOT}
+
+# ONLY for Debug
+RUN python -m pip install --no-cache-dir debugpy
+# --target "${LAMBDA_TASK_ROOT}"
+
+# ------ Stage 2 : Copy code -------
+# copy data crawling code
+COPY ./app/src/datapipe ${LAMBDA_TASK_ROOT}/src/datapipe
+COPY ./app/src/core ${LAMBDA_TASK_ROOT}/src/core
+COPY ./app/src/db ${LAMBDA_TASK_ROOT}/src/db
+COPY ./app/src/models ${LAMBDA_TASK_ROOT}/src/models
+
+# set the path to src folder in docker container
+ENV PYTHONPATH="${LAMBDA_TASK_ROOT}/src/:${LAMBDA_TASK_ROOT}/lib:${LAMBDA_TASK_ROOT}/bin/"
+
+# WORKDIR ${LAMBDA_TASK_ROOT}/src/
+CMD ["datapipe.aws_lambda_handler.handler"]

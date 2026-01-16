@@ -29,7 +29,7 @@ docker run -p 6333:6333 -p 6334:6334 \
 4. Git pull code from this repo
 5. Create a .env file at the root and configure add the env variable OPENAI_API_KEY to it along with its value i.e OPENAI_API_KEY=<YOUR KEY>. 
 6. #TODO : Ensure all the packages are downloaded and your env is setup
-7. Run the cmd `ideation/PdfIngester/src/RAG/Datastore.py`. On the requested input, enter `gen`.
+7. Run the cmd `PdfIngester/src/RAG/Datastore.py`. On the requested input, enter `gen`.
 8. Once data is loaded into the DB, query data by running below. You may replace the text "Base pan hole of outdoor unit" with any text in the PDF doc in `data/manuals` folder :
 ```
 ideation/PdfIngester/src/RAG/Query_Data.py "Base pan hole of outdoor unit"

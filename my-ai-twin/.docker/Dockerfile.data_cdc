@@ -1,0 +1,47 @@
+# Using python-optimized base image (debian bookworm aka v12 os)
+# NOTE: as of Jul 21, all slim bookworm versions hv critical CVEs. For this POC sticking to 3.11
+FROM python:3.11-slim-bookworm AS builder
+
+ENV POETRY_VERSION=2.1.3
+# Prevent Python from writing .pyc files to disk and bloat the docker pod
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# install dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    python3-dev \
+    curl \
+    build-essential \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# install Poetry
+RUN pip install --no-cache-dir "poetry==${POETRY_VERSION}"
+RUN poetry config installer.max-workers 20
+
+# working dir in docker
+WORKDIR /app
+
+# copy the pyproject.toml and poetry.lock
+COPY ./pyproject.toml ./poetry.lock ./
+
+# install dependencies
+RUN poetry config virtualenvs.create false && \
+    poetry install --no-root --no-interaction --no-cache && \
+    rm -rf ~/.cache/pypoetry/cache/ && \
+    rm -rf ~/.cache/pypoetry/artifacts/
+
+# install dependecies
+RUN poetry install --no-root
+
+# ------ Stage 2 : Copy code -------
+COPY ./app/src/cdc ./cdc
+# dependencies
+COPY ./app/src/core ./core
+COPY ./app/src/db ./db
+COPY ./app/src/featurepipe ./featurepipe
+
+
+ENV PYTHONPATH=/app
+
+CMD poetry run python /app/cdc/change_data_capture.py && tail -f /dev/null
