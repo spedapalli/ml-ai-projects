@@ -692,7 +692,7 @@ unstructured==0.18.13
     # via my-ai-twin (pyproject.toml)
 unstructured-client==0.42.3
     # via unstructured
-urllib3==2.5.0
+urllib3==2.6.3
     # via
     #   botocore
     #   comet-ml
