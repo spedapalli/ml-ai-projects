@@ -24,8 +24,7 @@ class GithubCrawler (BaseCrawler):
 
         Args:
             ignore (tuple, optional): special files or dirs to ignore. Defaults to (".git", ".toml", ".lock", ".png").
-            process_dirs (tuple, optional): Dirs that add value to process and generate code. Ignore data, temp dir or other dirs that add no value.
-            Defaults to ("app", "src", "ui", "scripts", "ansible", "test").
+            ignore_dirs (tuple, optional): Directories without any code such as data, data-analysis, images, logs, temp etc..
         """
         super().__init__()
         self._ignore = ignore
@@ -48,12 +47,15 @@ class GithubCrawler (BaseCrawler):
                 dir = root.replace(repo_path, "").lstrip("/")
                 # Ignore any dir that are in ignore list OR any dirs that are not in Process dir
                 last_dir = dir.split("/")[-1]
+                logger.info(f"Dir is : {dir}, and the last dir name is: {last_dir}")
                 if (dir.startswith(self._ignore) or (last_dir in self._ignore_dirs) ):
+                    logger.info(f"Repository files : Ignoring dir: {dir}")
                     continue
 
                 tree = {}
                 for file in files:
                     if (file.endswith(self._ignore)):
+                        logger.info(f"Repository files : Ignoring file: {file}")
                         continue
 
                     file_path = os.path.join(dir, file)
@@ -64,7 +66,7 @@ class GithubCrawler (BaseCrawler):
                     instance = self.model(
                         name = repo_name, link=link, content = tree, owner_id=kwargs.get('user')
                     )
-                    instance.save()
+                    # instance.save()
 
         except Exception as e:
             logger.error(f"Failed to scrape Github repo : {e}", exc_info=True)

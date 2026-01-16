@@ -67,6 +67,7 @@ class AppSettings(BaseSettings) :
     EMBEDDING_MODEL_FOR_CODE_ID: str = "BAAI/bge-large-en-v1.5"
     EMBEDDING_MODEL_FOR_CODE_VECTOR_LENGTH: int = 1024    # max input text length for code embeddings
     EMBEDDING_MODEL_DEVICE: str = "cpu"
+    EMBEDDING_MODEL_GPU_DEVICE: str = "cuda"
 
     CROSS_ENCODER_MODEL_ID: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     CROSS_ENCODER_MODEL_DEVICE: str = "cpu" # or cuda
@@ -75,7 +76,7 @@ class AppSettings(BaseSettings) :
     OPIK_API_KEY: str | None = None
 
     def patch_localhost(self) -> None:
-        self.MONGO_DATABASE_HOST = "mongodb://localhost:30002/?directConnection=true"
+        self.MONGO_DATABASE_HOST = "mongodb://localhost:30003/?directConnection=true"
         # self.MONGO_DATABASE_HOST = f"mongodb://localhost:30001,localhost:30002,localhost:30003/?replicaSet={self.MONGO_REPLICA_SET}"
         self.QDRANT_DATABASE_HOST = "localhost"
         self.RABBITMQ_HOST = "localhost"

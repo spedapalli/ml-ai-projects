@@ -73,3 +73,29 @@ class EmbeddingDispatcher:
                     embedding_len=len(embedded_chunk_model.embedded_content))
 
         return embedded_chunk_model
+
+
+    @classmethod
+    def dispatch_batch_embedder(cls, batched_data: tuple[str, list[DataModel]]) -> tuple[str, list[DataModel]] :
+        """Process embedding for batch of texts (chunks)
+
+        Args:
+            batched_data (tuple[str, list[DataModel]]): chuncked text
+
+        Returns:
+            tuple[str, list[DataModel]]: _description_
+        """
+
+        batch_key, data_models = batched_data
+        if not data_models:
+            return (batch_key, [])
+
+        # all items in the batch must be same type
+        data_type: str = data_models[0].type
+        handler: EmbeddingDataHandler = cls.embedding_factory.create_handler(data_type)
+        embeds_models = handler.embed_batch(data_models=data_models)
+        logger.info(f"Batch embedded {len(embeds_models)} chunks", data_type=data_type)
+
+        return (batch_key, embeds_models)
+
+

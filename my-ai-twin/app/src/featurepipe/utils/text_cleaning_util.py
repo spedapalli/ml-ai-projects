@@ -100,5 +100,5 @@ def normalize_text(text_content: str | None) -> str:
 
 
 # debug / test
-print("printing bold zero: ", "\U0001D7CE", " also : ", "\U0001D7EC")
+# print("printing bold zero: ", "\U0001D7CE", " also : ", "\U0001D7EC")
 

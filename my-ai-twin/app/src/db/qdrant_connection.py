@@ -1,5 +1,7 @@
+from qdrant_client.models import PointStruct
+from typing_extensions import deprecated
 from qdrant_client import QdrantClient, models
-from qdrant_client.http.models import Batch, Distance, VectorParams
+from qdrant_client.http.models import Batch, Distance, VectorParams, Filter
 from qdrant_client.conversions import common_types as types
 
 from core import logger_utils
@@ -61,7 +63,7 @@ class QdrantDatabaseConnector:
             logger.exception(e)
             raise e
 
-
+    @deprecated("Use the batch upsert function write_batch_data")
     def write_data(self, collection_name: str, points: Batch):
         """upsert data into the DB
 
@@ -75,6 +77,17 @@ class QdrantDatabaseConnector:
             logger.exception(f"An error occurred while upserting data to collection {collection_name}")
             raise
 
+    def write_batch_data(self, collection_name:str, points_batch:list[PointStruct]) :
+        try :
+            self._instance.upload_points(
+                        collection_name=collection_name,
+                        points=points_batch,
+                        parallel=4)
+        except Exception as e:
+            logger.exception(f"An error occurred while uploading list of Points (Batch) to collection {collection_name}")
+            raise e
+
+
     def search(self,
                collection_name:str,
                query_vector:list,
@@ -86,6 +99,7 @@ class QdrantDatabaseConnector:
                                                query_filter=query_filter,
                                                limit=limit)
         return response.points
+
 
     def scroll(self, collection_name:str, limit:int) -> tuple[list[types.Record], types.PointId | None]:
         """Use to scroll through a collection that has large number of records, by specifying the param limit.
@@ -99,6 +113,13 @@ class QdrantDatabaseConnector:
             list with each Point (record in Db) and its associated unique Id in Db
         """
         return self._instance.scroll(collection_name=collection_name, limit=limit)
+
+
+    def delete_points(self, collection_name:str, points_selector: Filter) :
+        self._instance.delete(collection_name=collection_name,
+                        points_selector=points_selector,
+                        wait=True)
+
 
     def close(self):
         if self._instance:

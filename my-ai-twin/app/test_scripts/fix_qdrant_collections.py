@@ -1,14 +1,52 @@
 #!/usr/bin/env python3
 """
-Script to delete and recreate Qdrant collections with correct vector dimensions.
-Run this after fixing the vector dimension configuration bug.
+Script to cleanup or fix Qdrant collections .
+
 """
 import sys
-sys.path.insert(0, '/app/src')
+from pathlib import Path
+
+# Add app/src to Python path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+from core.config import settings
+settings.patch_localhost()
+
+
+from qdrant_client.models import Filter
 
 from db.qdrant_connection import QdrantDatabaseConnector
 
-def main():
+
+
+def cleanup_all_records():
+    client = QdrantDatabaseConnector()
+
+    collections = [
+        "cleaned_posts",
+        "cleaned_articles",
+        "cleaned_repositories",
+        "vector_posts",
+        "vector_articles",
+        "vector_repositories"
+    ]
+
+    try :
+        for collection_name in collections :
+            client.delete_points(collection_name=collection_name,
+                        points_selector=Filter(
+                            must=[]
+                        ))
+            print(f"All records in {collection_name} deleted")
+    except Exception as e:
+        print(f"Error occured when processing collection : {collection_name}")
+        raise
+
+
+
+
+
+def fix_vector_dim():
     client = QdrantDatabaseConnector()
 
     # Collections to recreate
@@ -41,4 +79,4 @@ def main():
     print("  - vector_repositories: 768 dims")
 
 if __name__ == "__main__":
-    main()
+    cleanup_all_records()

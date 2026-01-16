@@ -36,6 +36,9 @@ RUN poetry config virtualenvs.create false && \
     rm -rf ~/.cache/pypoetry/cache/ && \
     rm -rf ~/.cache/pypoetry/artifacts/
 
+# ONLY for Debug
+RUN python -m pip install --no-cache-dir debugpy
+
 
 WORKDIR ${WORKSPACE_ROOT}
 
