@@ -443,7 +443,7 @@ pygments==2.19.2
     #   rich
 pymongo==4.14.1
     # via my-ai-twin (pyproject.toml)
-pypdf==6.0.0
+pypdf==6.6.0
     # via unstructured-client
 pysocks==1.7.1
     # via
