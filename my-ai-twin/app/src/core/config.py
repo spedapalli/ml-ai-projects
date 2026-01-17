@@ -76,7 +76,7 @@ class AppSettings(BaseSettings) :
     OPIK_API_KEY: str | None = None
 
     def patch_localhost(self) -> None:
-        self.MONGO_DATABASE_HOST = "mongodb://localhost:30003/?directConnection=true"
+        self.MONGO_DATABASE_HOST = "mongodb://localhost:30002/?directConnection=true"
         # self.MONGO_DATABASE_HOST = f"mongodb://localhost:30001,localhost:30002,localhost:30003/?replicaSet={self.MONGO_REPLICA_SET}"
         self.QDRANT_DATABASE_HOST = "localhost"
         self.RABBITMQ_HOST = "localhost"

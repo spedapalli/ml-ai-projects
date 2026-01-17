@@ -154,7 +154,7 @@ services:
       - .env
     ports:
       - "5679:5679" # debugpy port
-    command: [ "python", "-m", "debugpy", "--listen", "0.0.0.0:5679", "--wait-for-client", "-m", "bytewax.run", "featurepipe.main:flow" ]
+    # command: [ "python", "-m", "debugpy", "--listen", "0.0.0.0:5679", "--wait-for-client", "-m", "bytewax.run", "featurepipe.main:flow" ]
     depends_on:
       rabbitmq:
         condition: service_healthy
