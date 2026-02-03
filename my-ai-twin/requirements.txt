@@ -543,7 +543,7 @@ safehttpx==0.1.6
     # via gradio
 safetensors==0.6.2
     # via transformers
-sagemaker==2.251.0
+sagemaker==2.256.0
     # via my-ai-twin (pyproject.toml)
 sagemaker-core==1.0.54
     # via sagemaker
