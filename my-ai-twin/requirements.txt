@@ -98,7 +98,7 @@ core-tests==1.1.5
     #   core-mixins
 coverage==7.10.3
     # via core-tests
-cryptography==45.0.6
+cryptography==46.0.5
     # via unstructured-client
 dataclasses-json==0.6.7
     # via
