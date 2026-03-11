@@ -154,7 +154,7 @@ gdown==5.2.0
     # via my-ai-twin (pyproject.toml)
 google-pasta==0.2.0
     # via sagemaker
-gradio==5.46.1
+gradio==6.7.0
     # via my-ai-twin (pyproject.toml)
 gradio-client==1.13.1
     # via gradio
