@@ -347,7 +347,7 @@ openai==2.8.1
     #   opik
 opik==1.9.0
     # via my-ai-twin (pyproject.toml)
-orjson==3.11.2
+orjson==3.11.6
     # via
     #   gradio
     #   langsmith
