@@ -16,7 +16,7 @@ def chunk_text(text:str) -> list[str]:
     # )
     char_splitter = ChunkingModelManager.get_char_splitter_model()
     text_split = char_splitter.split_text(text=text)
-    print("Text split: ", text_split)
+    # print("Text split: ", text_split)
 
     # Split abv text into tokens (words/subwords).Use the default model "sentence-transformers/all-mpnet-base-v2"
     # token_splitter = SentenceTransformersTokenTextSplitter(

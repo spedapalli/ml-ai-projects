@@ -1,0 +1,12 @@
+patterns:
+    - path: "app/test/**"
+      operations: [create, modify, delete]
+      auto_approve: true   # Always approve test changes
+
+    - path: "app/src/**"
+      operations: [create, modify, delete]
+      auto_approve: false   # Always ask for code changes
+
+    - path: "pyproject.toml"
+      operations: [modify]
+      auto_approve: false   # Always ask for dependency changes
