@@ -268,7 +268,7 @@ langchain==0.3.27
     #   langchain-community
 langchain-community==0.3.31
     # via my-ai-twin (pyproject.toml)
-langchain-core==0.3.81
+langchain-core==1.2.22
     # via
     #   langchain
     #   langchain-community
