@@ -7,4 +7,6 @@
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
+    "makefile.configureOnOpen": false,
+    "postman.settings.dotenv-detection-notification-visibility": false,
 }
