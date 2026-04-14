@@ -3584,9 +3584,9 @@ pynacl==1.6.2 ; python_full_version >= "3.11.12" and python_version < "4.0" \
 pyparsing==3.3.2 ; python_full_version >= "3.11.12" and python_version < "4.0" \
     --hash=sha256:850ba148bd908d7e2411587e247a1e4f0327839c40e2e5e6d05a007ecc69911d \
     --hash=sha256:c777f4d763f140633dcb6d8a3eda953bf7a214dc4eff598413c070bcdc117cbc
-pypdf==6.4.2 ; python_full_version >= "3.11.12" and python_version < "4.0" \
-    --hash=sha256:014dcff867fd99fc0b6fc90ed1f7e1347ef2317ae038a489c2caa64106d268f4 \
-    --hash=sha256:c466ff1272ffb4712c2348d2bbc3019bc93f1c62ccfaf50808e3b9f13c3dc527
+pypdf==6.10.0 ; python_full_version >= "3.11.12" and python_version < "4.0" \
+    --hash=sha256:4c5a48ba258c37024ec2505f7e8fd858525f5502784a2e1c8d415604af29f6ef \
+    --hash=sha256:90005e959e1596c6e6c84c8b0ad383285b3e17011751cedd17f2ce8fcdfc86de
 pysocks==1.7.1 ; python_full_version >= "3.11.12" and python_version < "4.0" \
     --hash=sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299 \
     --hash=sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5 \
