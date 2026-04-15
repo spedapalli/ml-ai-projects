@@ -1925,9 +1925,9 @@ langchain-classic==1.0.3 ; python_full_version >= "3.11.12" and python_version <
 langchain-community==0.4.1 ; python_full_version >= "3.11.12" and python_version < "4.0" \
     --hash=sha256:2135abb2c7748a35c84613108f7ebf30f8505b18c3c18305ffaecfc7651f6c6a \
     --hash=sha256:f3b211832728ee89f169ddce8579b80a085222ddb4f4ed445a46e977d17b1e85
-langchain-core==1.2.27 ; python_full_version >= "3.11.12" and python_version < "4.0" \
-    --hash=sha256:9ecd6b0393b969fe88f6b9b309367134080ab095946d79e6937dd3911aa42bd5 \
-    --hash=sha256:c18372e4c4c1454d49bf23a2e484431e71bd39b64173a0f621f0fc283d7183a4
+langchain-core==1.2.28 ; python_full_version >= "3.11.12" and python_version < "4.0" \
+    --hash=sha256:271a3d8bd618f795fdeba112b0753980457fc90537c46a0c11998516a74dc2cb \
+    --hash=sha256:80764232581eaf8057bcefa71dbf8adc1f6a28d257ebd8b95ba9b8b452e8c6ac
 langchain-openai==1.1.12 ; python_full_version >= "3.11.12" and python_version < "4.0" \
     --hash=sha256:ccf5ef02c896f6807b4d0e51aaf678a72ce81ae41201cae8d65e11eeff9ecb79 \
     --hash=sha256:da71ca3f2d18c16f7a2443cc306aa195ad2a07054335ac9b0626dcae02b6a0c5
